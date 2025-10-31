@@ -15,6 +15,10 @@ class Workout
     #[ORM\Column]
     private ?int $id = null;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
     #[ORM\Column]
     private ?\DateTime $day = null;
 
@@ -28,20 +32,16 @@ class Workout
      * @var Collection<int, Exercise>
      */
     #[ORM\OneToMany(targetEntity: Exercise::class, mappedBy: 'workout')]
-    private Collection $exercises {
-        get {
-            return $this->exercises;
-        }
+    private Collection $exercises;
+
+    public function getExercises(): ArrayCollection
+    {
+        return $this->exercises;
     }
 
     public function __construct()
     {
         $this->exercises = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getDay(): ?\DateTime

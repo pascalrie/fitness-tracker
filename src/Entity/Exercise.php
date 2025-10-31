@@ -13,31 +13,22 @@ class Exercise
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
+    private ?int $id = null;
 
+    public function getId(): ?int {
+        return $this->id;
+    }
     /**
      * @var Collection<int, MuscleGroup>
      */
     #[ORM\ManyToMany(targetEntity: MuscleGroup::class)]
-    private Collection $muscleGroup {
-        get {
-            return $this->muscleGroup;
-        }
-    }
+    private Collection $muscleGroup;
 
     /**
      * @var Collection<int, Set>
      */
     #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'exercise', orphanRemoval: true)]
-    private Collection $sets {
-        get {
-            return $this->sets;
-        }
-    }
+    private Collection $sets;
 
     #[ORM\Column]
     private ?\DateTime $time = null;
@@ -52,10 +43,25 @@ class Exercise
     #[ORM\JoinColumn(nullable: false)]
     private ?Workout $workout = null;
 
+    /**
+     * @var Collection<int, Plan>
+     */
+    #[ORM\ManyToMany(targetEntity: Plan::class, mappedBy: 'exercises')]
+    private Collection $plans;
+
     public function __construct()
     {
         $this->muscleGroup = new ArrayCollection();
         $this->sets = new ArrayCollection();
+        $this->plans = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, MuscleGroup>
+     */
+    public function getMuscleGroup(): Collection
+    {
+        return $this->muscleGroup;
     }
 
     public function addMuscleGroup(MuscleGroup $muscleGroup): static
@@ -72,6 +78,14 @@ class Exercise
         $this->muscleGroup->removeElement($muscleGroup);
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Set>
+     */
+    public function getSets(): Collection
+    {
+        return $this->sets;
     }
 
     public function addSet(Set $set): static
@@ -140,6 +154,33 @@ class Exercise
     public function setWorkout(?Workout $workout): static
     {
         $this->workout = $workout;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Plan>
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): static
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans->add($plan);
+            $plan->addExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): static
+    {
+        if ($this->plans->removeElement($plan)) {
+            $plan->removeExercise($this);
+        }
 
         return $this;
     }

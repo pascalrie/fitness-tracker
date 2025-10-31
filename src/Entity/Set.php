@@ -12,10 +12,11 @@ class Set
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
+    private ?int $id = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     #[ORM\Column]

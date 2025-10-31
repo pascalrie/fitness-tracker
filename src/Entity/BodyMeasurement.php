@@ -11,11 +11,7 @@ class BodyMeasurement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
+    private ?int $id = null;
 
     #[ORM\Column]
     private ?float $bodyWeight = null;
@@ -25,6 +21,11 @@ class BodyMeasurement
 
     #[ORM\Column]
     private ?int $fitnessEvaluation = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getBodyWeight(): ?float
     {

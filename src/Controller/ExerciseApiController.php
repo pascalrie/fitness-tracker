@@ -2,17 +2,39 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class ExerciseApiController extends BaseApiController
 {
-    #[Route('/exercise/api', name: 'app_exercise_api')]
-    public function index(): Response
+    #[Route('/exercise/api/create', name: 'create_exercise_api', methods: ['POST'])]
+    public function create(): JsonResponse
     {
-        return $this->render('exercise_api/index.html.twig', [
-            'controller_name' => 'ExerciseApiController',
-        ]);
+        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+    }
+
+    #[Route('/exercise/api/list', name: 'list_exercise_api', methods: ['GET'])]
+    public function list(): JsonResponse
+    {
+        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+    }
+
+    #[Route('/exercise/api/show/{id}', name: 'show_exercise_api', methods: ['GET'])]
+    public function show(): JsonResponse
+    {
+        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+    }
+
+    #[Route('/exercise/api/update/{id}', name: 'update_exercise_api', methods: ['PUT'])]
+    public function update(): JsonResponse
+    {
+        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+    }
+
+    #[Route('/exercise/api/delete/{id}', name: 'delete_exercise_api', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
     }
 }
