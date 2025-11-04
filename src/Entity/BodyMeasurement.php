@@ -22,6 +22,37 @@ class BodyMeasurement
     #[ORM\Column]
     private ?int $fitnessEvaluation = null;
 
+    #[ORM\Column]
+    private ?float $bodyHeight = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTime $updatedAt = null;
+
+    public function __construct(?float $bodyWeight, ?float $bmi, ?int $fitnessEvaluation, ?float $bodyHeight)
+    {
+        if (null !== $bodyWeight) {
+            $this->bodyWeight = $bodyWeight;
+        }
+
+        if (null !== $bmi) {
+            $this->bmi = $bmi;
+        }
+
+        if (null !== $fitnessEvaluation) {
+            $this->fitnessEvaluation = $fitnessEvaluation;
+        }
+
+        if (null !== $bodyHeight) {
+            $this->bodyHeight = $bodyHeight;
+        }
+
+        $this->setCreatedAt(new \DateTimeImmutable('NOW'));
+        $this->setUpdatedAt(new \DateTime('NOW'));
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -61,5 +92,68 @@ class BodyMeasurement
         $this->fitnessEvaluation = $fitnessEvaluation;
 
         return $this;
+    }
+
+    public function getBodyHeight(): ?float
+    {
+        return $this->bodyHeight;
+    }
+
+    public function setBodyHeight(float $bodyHeight): static
+    {
+        $this->bodyHeight = $bodyHeight;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTime $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function jsonSerialize(bool $withBodyWeight = true, bool $withBmi = true, bool $withFitnessEvaluation = true, bool $withBodyHeight = true): array
+    {
+        $json = [
+            'id' => $this->id,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'updatedAt' => $this->updatedAt->format('Y-m-d H:i:s'),
+        ];
+
+        if ($withBodyWeight) {
+            $json['bodyWeight'] = $this->bodyWeight;
+        }
+
+        if ($withBmi) {
+            $json['bmi'] = $this->bmi;
+        }
+
+        if ($withFitnessEvaluation) {
+            $json['fitnessEvaluation'] = $this->fitnessEvaluation;
+        }
+
+        if ($withBodyHeight) {
+            $json['bodyHeight'] = $this->bodyHeight;
+        }
+
+        return $json;
     }
 }
