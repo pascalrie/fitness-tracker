@@ -22,7 +22,7 @@ final class MuscleGroupApiController extends BaseApiController
     #[Route('/muscle/group/api/create', name: 'create_muscle_group_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $name = $bodyParameters->name;
 
         $muscleGroup = $this->muscleGroupService->create($name);
@@ -51,10 +51,11 @@ final class MuscleGroupApiController extends BaseApiController
     #[Route('/muscle/group/api/update/{id}', name: 'update_muscle_group_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $name = $bodyParameters->name;
+        $newExerciseUniqueNames = $bodyParameters->newExerciseNames;
 
-        $muscleGroup = $this->muscleGroupService->update($id, $name);
+        $muscleGroup = $this->muscleGroupService->update($id, $name, $newExerciseUniqueNames);
         return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
@@ -64,7 +65,7 @@ final class MuscleGroupApiController extends BaseApiController
         $this->muscleGroupService->delete($id);
         $shouldBeNull = $this->muscleGroupService->show($id);
         if (null !== $shouldBeNull) {
-            return $this->json("Deletion failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json("Deletion of Muscle Group with id: " . $id . " failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Deletion was successful.", Response::HTTP_OK);
     }

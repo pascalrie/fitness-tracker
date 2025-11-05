@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Workout;
 use App\Repository\WorkoutRepository;
+use Doctrine\ORM\EntityNotFoundException;
 
 class WorkoutService
 {
@@ -27,6 +28,9 @@ class WorkoutService
     public function update(int $id, ?bool $stretch = null, ?float $bodyWeight = null): Workout
     {
         $workout = $this->show($id);
+        if (!$workout) {
+            throw new EntityNotFoundException('Workout with id ' . $id . ' not found');
+        }
         if (null !== $stretch) {
             $workout->setStretch($stretch);
         }
@@ -48,7 +52,7 @@ class WorkoutService
     public function delete(int $id): void
     {
         $workout = $this->workoutRepository->findBy(['id' => $id])[0];
-        $this->workoutRepository->remove($workout);
+        $this->workoutRepository->remove($workout, true);
     }
 
     public function show(int $id): ?Workout

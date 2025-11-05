@@ -31,9 +31,15 @@ class Workout
     private ?bool $stretch = false;
 
     /**
+     * @var Collection<int, Execution>
+     */
+    #[ORM\OneToMany(targetEntity: Execution::class, mappedBy: 'workout', orphanRemoval: true)]
+    private Collection $executions;
+
+    /**
      * @var Collection<int, Exercise>
      */
-    #[ORM\OneToMany(targetEntity: Exercise::class, mappedBy: 'workout')]
+    #[ORM\ManyToMany(targetEntity: Exercise::class, mappedBy: 'workouts')]
     private Collection $exercises;
 
     public function __construct(?bool $stretch = false, ?float $bodyWeight = null)
@@ -45,11 +51,7 @@ class Workout
             $this->bodyWeight = $bodyWeight;
         }
         $this->exercises = new ArrayCollection();
-    }
-
-    public function getExercises(): ArrayCollection
-    {
-        return $this->exercises;
+        $this->executions = new ArrayCollection();
     }
 
     public function getDateOfWorkout(): ?\DateTime
@@ -88,29 +90,7 @@ class Workout
         return $this;
     }
 
-    public function addExercise(Exercise $exercise): static
-    {
-        if (!$this->exercises->contains($exercise)) {
-            $this->exercises->add($exercise);
-            $exercise->setWorkout($this);
-        }
-
-        return $this;
-    }
-
-    public function removeExercise(Exercise $exercise): static
-    {
-        if ($this->exercises->removeElement($exercise)) {
-            // set the owning side to null (unless already changed)
-            if ($exercise->getWorkout() === $this) {
-                $exercise->setWorkout(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = false, bool $withStretch = true, bool $withExercises = true): array
+    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = false, bool $withStretch = true, bool $withExercises = true, bool $withExecutions = true): array
     {
         $json = [
             'id' => $this->id,
@@ -134,6 +114,69 @@ class Workout
             }
         }
 
+        if ($withExecutions) {
+            foreach ($this->executions as $execution) {
+                $json['executions'][] = $execution->jsonSerialize();
+            }
+        }
+
         return $json;
+    }
+
+    /**
+     * @return Collection<int, Execution>
+     */
+    public function getExecutions(): Collection
+    {
+        return $this->executions;
+    }
+
+    public function addExecution(Execution $execution): static
+    {
+        if (!$this->executions->contains($execution)) {
+            $this->executions->add($execution);
+            $execution->setWorkout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExecution(Execution $execution): static
+    {
+        if ($this->executions->removeElement($execution)) {
+            // set the owning side to null (unless already changed)
+            if ($execution->getWorkout() === $this) {
+                $execution->setWorkout(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Exercise>
+     */
+    public function getExercises(): Collection
+    {
+        return $this->exercises;
+    }
+
+    public function addExercise(Exercise $exercise): static
+    {
+        if (!$this->exercises->contains($exercise)) {
+            $this->exercises->add($exercise);
+            $exercise->addWorkout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercise(Exercise $exercise): static
+    {
+        if ($this->exercises->removeElement($exercise)) {
+            $exercise->removeWorkout($this);
+        }
+
+        return $this;
     }
 }

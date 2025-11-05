@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Plan;
 use App\Repository\PlanRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityNotFoundException;
 
 class PlanService
 {
@@ -26,6 +27,9 @@ class PlanService
                            ?int $newSplit = null, array $newExercises = null): Plan
     {
         $plan = $this->show($id);
+        if (!$plan) {
+            throw new EntityNotFoundException('Plan with id ' . $id . ' not found');
+        }
         if (null !== $newTotalDaysOfTraining) {
             $plan->setTotalDaysOfTraining($newTotalDaysOfTraining);
         }
@@ -53,7 +57,7 @@ class PlanService
     public function delete(int $id): void
     {
         $plan = $this->show($id);
-        $this->planRepository->remove($plan);
+        $this->planRepository->remove($plan, true);
     }
 
     public function show(int $id): ?Plan

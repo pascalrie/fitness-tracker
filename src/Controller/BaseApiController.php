@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class BaseApiController extends AbstractController
 {
@@ -12,5 +13,10 @@ class BaseApiController extends AbstractController
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    protected function getBodyParameters(Request $request): object
+    {
+        return json_decode($request->getContent());
     }
 }

@@ -16,28 +16,30 @@ class ExerciseRepository extends ServiceEntityRepository
         parent::__construct($registry, Exercise::class);
     }
 
-//    /**
-//     * @return Exercise[] Returns an array of Exercise objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function add(Exercise $exercise, bool $flush = false): void
+    {
+        $this->persist($exercise);
 
-//    public function findOneBySomeField($value): ?Exercise
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if ($flush) {
+            $this->flush();
+        }
+    }
+
+    public function remove(Exercise $exercise, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($exercise);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function persist(Exercise $exercise): void {
+        $this->getEntityManager()->persist($exercise);
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
 }

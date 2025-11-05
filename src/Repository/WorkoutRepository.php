@@ -42,5 +42,4 @@ class WorkoutRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->flush();
     }
-
 }

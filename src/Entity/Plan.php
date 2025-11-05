@@ -42,7 +42,10 @@ class Plan
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
 
-    public function __construct(?int $daysOfTraining = null, ?int $trainingTimesAWeek = 3, ?int $split = 1)
+    #[ORM\Column]
+    private ?bool $active = false;
+
+    public function __construct(?int $daysOfTraining = null, ?int $trainingTimesAWeek = 3, ?int $split = 1, bool $active = true)
     {
         $this->exercises = new ArrayCollection();
         $this->startDate = new \DateTime('NOW');
@@ -50,6 +53,7 @@ class Plan
         $this->totalDaysOfTraining = $daysOfTraining;
         $this->trainingTimesAWeek = $trainingTimesAWeek;
         $this->split = $split;
+        $this->active = $active;
     }
 
     public function getId(): ?int
@@ -141,7 +145,7 @@ class Plan
         return $this;
     }
 
-    public function jsonSerialize(bool $withExercises = false, bool $withTotalDaysOfTraining = true, bool $withTrainingTimesAWeek = true, bool $withSplit = true): array
+    public function jsonSerialize(bool $withExercises = false, bool $withTotalDaysOfTraining = true, bool $withTrainingTimesAWeek = true, bool $withSplit = true, bool $withActive = true): array
     {
         $json = [
             'id' => $this->id,
@@ -167,6 +171,22 @@ class Plan
             $json['split'] = $this->split;
         }
 
+        if ($withActive) {
+            $json['active'] = $this->active;
+        }
+
         return $json;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
+
+        return $this;
     }
 }

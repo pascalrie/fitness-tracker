@@ -22,7 +22,7 @@ final class WorkoutApiController extends BaseApiController
     #[Route('/workout/create', name: 'create_workout_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $stretch = (bool) $bodyParameters->stretch;
         $bodyWeight = (float) $bodyParameters->weight;
 
@@ -44,7 +44,7 @@ final class WorkoutApiController extends BaseApiController
     #[Route('/workout/create', name: 'create_workout_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $updatedStretch = (bool) $bodyParameters->stretch;
         $updatedBodyWeight = (float) $bodyParameters->weight;
 
@@ -65,7 +65,7 @@ final class WorkoutApiController extends BaseApiController
         $this->workoutService->delete($id);
         $shouldBeNull = $this->workoutService->show($id);
         if (null !== $shouldBeNull) {
-            return $this->json('Deletion failed', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json('Deletion of Workout with id: ' . $id . ' failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json('Deletion was successful.', Response::HTTP_OK);
     }

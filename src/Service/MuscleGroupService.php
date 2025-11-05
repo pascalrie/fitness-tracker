@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Exercise;
 use App\Entity\MuscleGroup;
 use App\Repository\MuscleGroupRepository;
+use Doctrine\ORM\EntityNotFoundException;
 
 class MuscleGroupService
 {
@@ -21,13 +23,21 @@ class MuscleGroupService
         return $muscleGroup;
     }
 
-    public function update(int $id, ?string $newName = null): MuscleGroup
+    public function update(int $id, ?string $newName = null, ?array $newExercises = []): MuscleGroup
     {
         $muscleGroup = $this->show($id);
-
+        if (!$muscleGroup) {
+            throw new EntityNotFoundException('MuscleGroup with id ' . $id . ' not found');
+        }
         if (null !== $newName) {
             $muscleGroup->setName($newName);
         }
+        if (null !== $newExercises) {
+            foreach ($newExercises as $newExercise) {
+                $muscleGroup->addExercise($newExercise);
+            }
+        }
+
         $this->muscleGroupRepository->flush();
 
         return $muscleGroup;
@@ -36,7 +46,7 @@ class MuscleGroupService
     public function delete(int $id): void
     {
         $muscleGroup = $this->show($id);
-        $this->muscleGroupRepository->remove($muscleGroup);
+        $this->muscleGroupRepository->remove($muscleGroup, true);
     }
 
     public function show(int $id): ?MuscleGroup

@@ -22,7 +22,7 @@ final class BodyMeasurementApiController extends BaseApiController
     #[Route('/body/measurement/api/create', name: 'create_body_measurement_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $fitnessEvaluation = (int)$bodyParameters->fitnessEvaluation;
         $bodyWeight = (float)$bodyParameters->bodyWeight;
         $bodyHeight = (float)$bodyParameters->bodyHeight;
@@ -54,7 +54,7 @@ final class BodyMeasurementApiController extends BaseApiController
     #[Route('/body/measurement/api/update/{id}', name: 'update_body_measurement_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $fitnessEvaluation = (int)$bodyParameters->fitnessEvaluation;
         $bodyWeight = (float)$bodyParameters->bodyWeight;
         $bodyHeight = (float)$bodyParameters->bodyHeight;
@@ -70,7 +70,7 @@ final class BodyMeasurementApiController extends BaseApiController
         $this->bodyMeasurementService->delete($id);
         $shouldBeNull = $this->bodyMeasurementService->show($id);
         if (null !== $shouldBeNull) {
-            return $this->json("Deletion failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json("Deletion of Body Measurement with id: " . $id . " failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Deletion was successful.", Response::HTTP_OK);
     }

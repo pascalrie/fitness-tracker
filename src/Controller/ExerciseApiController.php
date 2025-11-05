@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class ExerciseApiController extends BaseApiController
 {
     #[Route('/exercise/api/create', name: 'create_exercise_api', methods: ['POST'])]
-    public function create(): JsonResponse
+    public function create(Request $request): JsonResponse
     {
+        $bodyParameters = $this->getBodyParameters($request);
+
         return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
     }
 
@@ -27,8 +30,10 @@ final class ExerciseApiController extends BaseApiController
     }
 
     #[Route('/exercise/api/update/{id}', name: 'update_exercise_api', methods: ['PUT'])]
-    public function update(): JsonResponse
+    public function update(Request $request): JsonResponse
     {
+        $bodyParameters = $this->getBodyParameters($request);
+
         return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
     }
 

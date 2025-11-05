@@ -61,7 +61,7 @@ final class PlanApiController extends BaseApiController
     #[Route('/plan/api/update/{id}', name: 'update_plan_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
-        $bodyParameters = json_decode($request->getContent());
+        $bodyParameters = $this->getBodyParameters($request);
         $newExercises = $bodyParameters->exercises;
         $newTotalDaysOfTraining = $bodyParameters->totalDaysOfTraining;
         $newTrainingTimesAWeek = $bodyParameters->trainingTimesAWeek;
@@ -83,7 +83,7 @@ final class PlanApiController extends BaseApiController
         $shouldBeNull = $this->planService->show($id);
 
         if (null !== $shouldBeNull) {
-            return $this->json('Deletion failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json('Deletion of Plan with id: ' . $id . ' failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json('Deletion was successful.', Response::HTTP_OK);
     }

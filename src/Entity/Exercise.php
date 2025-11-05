@@ -15,33 +15,19 @@ class Exercise
     #[ORM\Column]
     private ?int $id = null;
 
-    public function getId(): ?int {
+    public function getId(): ?int
+    {
         return $this->id;
     }
-    /**
-     * @var Collection<int, MuscleGroup>
-     */
-    #[ORM\ManyToMany(targetEntity: MuscleGroup::class)]
-    private Collection $muscleGroups;
 
     /**
-     * @var Collection<int, Set>
+     * @var Collection<int, Execution>
      */
-    #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'exercise', orphanRemoval: true)]
-    private Collection $sets;
-
-    #[ORM\Column]
-    private ?\DateTime $duration = null;
-
-    #[ORM\Column]
-    private ?float $weight = null;
+    #[ORM\OneToMany(targetEntity: Execution::class, mappedBy: 'exercise', orphanRemoval: true)]
+    private Collection $executions;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\ManyToOne(inversedBy: 'exercises')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Workout $workout = null;
+    private ?string $uniqueName = null;
 
     /**
      * @var Collection<int, Plan>
@@ -49,58 +35,49 @@ class Exercise
     #[ORM\ManyToMany(targetEntity: Plan::class, mappedBy: 'exercises')]
     private Collection $plans;
 
-    public function __construct()
+    /**
+     * @var Collection<int, Workout>
+     */
+    #[ORM\ManyToMany(targetEntity: Workout::class, inversedBy: 'exercises')]
+    private Collection $workouts;
+
+    /**
+     * @var Collection<int, MuscleGroup>
+     */
+    #[ORM\ManyToMany(targetEntity: MuscleGroup::class, mappedBy: 'exercises')]
+    private Collection $muscleGroups;
+
+    public function __construct(string $uniqueName)
     {
-        $this->muscleGroups = new ArrayCollection();
-        $this->sets = new ArrayCollection();
+        $this->uniqueName = $uniqueName;
+
+        $this->executions = new ArrayCollection();
         $this->plans = new ArrayCollection();
+        $this->workouts = new ArrayCollection();
+        $this->muscleGroups = new ArrayCollection();
     }
 
     /**
-     * @return Collection<int, MuscleGroup>
+     * @return Collection<int, Execution>
      */
-    public function getMuscleGroups(): Collection
+    public function getExecutions(): Collection
     {
-        return $this->muscleGroups;
+        return $this->executions;
     }
 
-    public function addMuscleGroup(MuscleGroup $muscleGroup): static
+    public function addSet(Execution $set): static
     {
-        if (!$this->muscleGroups->contains($muscleGroup)) {
-            $this->muscleGroups->add($muscleGroup);
-        }
-
-        return $this;
-    }
-
-    public function removeMuscleGroup(MuscleGroup $muscleGroup): static
-    {
-        $this->muscleGroups->removeElement($muscleGroup);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Set>
-     */
-    public function getSets(): Collection
-    {
-        return $this->sets;
-    }
-
-    public function addSet(Set $set): static
-    {
-        if (!$this->sets->contains($set)) {
-            $this->sets->add($set);
+        if (!$this->executions->contains($set)) {
+            $this->executions->add($set);
             $set->setExercise($this);
         }
 
         return $this;
     }
 
-    public function removeSet(Set $set): static
+    public function removeSet(Execution $set): static
     {
-        if ($this->sets->removeElement($set)) {
+        if ($this->executions->removeElement($set)) {
             // set the owning side to null (unless already changed)
             if ($set->getExercise() === $this) {
                 $set->setExercise(null);
@@ -110,50 +87,14 @@ class Exercise
         return $this;
     }
 
-    public function getDuration(): ?\DateTime
+    public function getUniqueName(): ?string
     {
-        return $this->duration;
+        return $this->uniqueName;
     }
 
-    public function setDuration(\DateTime $duration): static
+    public function setUniqueName(string $uniqueName): static
     {
-        $this->duration = $duration;
-
-        return $this;
-    }
-
-    public function getWeight(): ?float
-    {
-        return $this->weight;
-    }
-
-    public function setWeight(float $weight): static
-    {
-        $this->weight = $weight;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getWorkout(): ?Workout
-    {
-        return $this->workout;
-    }
-
-    public function setWorkout(?Workout $workout): static
-    {
-        $this->workout = $workout;
+        $this->uniqueName = $uniqueName;
 
         return $this;
     }
@@ -183,5 +124,87 @@ class Exercise
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Workout>
+     */
+    public function getWorkouts(): Collection
+    {
+        return $this->workouts;
+    }
+
+    public function addWorkout(Workout $workout): static
+    {
+        if (!$this->workouts->contains($workout)) {
+            $this->workouts->add($workout);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkout(Workout $workout): static
+    {
+        $this->workouts->removeElement($workout);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MuscleGroup>
+     */
+    public function getMuscleGroups(): Collection
+    {
+        return $this->muscleGroups;
+    }
+
+    public function addMuscleGroup(MuscleGroup $muscleGroup): static
+    {
+        if (!$this->muscleGroups->contains($muscleGroup)) {
+            $this->muscleGroups->add($muscleGroup);
+            $muscleGroup->addExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMuscleGroup(MuscleGroup $muscleGroup): static
+    {
+        if ($this->muscleGroups->removeElement($muscleGroup)) {
+            $muscleGroup->removeExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function jsonSerialize(bool $withMuscleGroups = true, $withWorkouts = false, $withExecutions = false, $withPlans = true): array
+    {
+        $json = [
+            'id' => $this->id,
+            'uniqueName' => $this->uniqueName,
+        ];
+
+        if ($withMuscleGroups) {
+            foreach ($this->getMuscleGroups() as $muscleGroup) {
+                $json += ['Muscle Group with id: ' . $muscleGroup->getId() => $muscleGroup->jsonSerialize()];
+            }
+        }
+        if ($withWorkouts) {
+            foreach ($this->getWorkouts() as $workout) {
+                $json += ['Workout with id: ' . $workout->getId() => $workout->jsonSerialize()];
+            }
+        }
+        if ($withExecutions) {
+            foreach ($this->getExecutions() as $execution) {
+                $json += ['Muscle Group with id: ' . $execution->getId() => $execution->jsonSerialize()];
+            }
+        }
+        if ($withPlans) {
+            foreach ($this->getPlans() as $plan) {
+                $json += ['Plan with id: ' . $plan->getId() => $plan->jsonSerialize()];
+            }
+        }
+
+        return $json;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\BodyMeasurement;
 use App\Repository\BodyMeasurementRepository;
+use Doctrine\ORM\EntityNotFoundException;
 
 class BodyMeasurementService
 {
@@ -21,11 +22,16 @@ class BodyMeasurementService
         return $bodyMeasurement;
     }
 
-    public function update(int $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
+    /**
+     * @throws \Exception
+     */
+    public function update(int    $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
                            ?float $bodyHeight = null): BodyMeasurement
     {
         $bodyMeasurement = $this->show($id);
-
+        if (!$bodyMeasurement) {
+            throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found');
+        }
         if ($bodyWeight !== null) {
             $bodyMeasurement->setBodyWeight($bodyWeight);
         }
