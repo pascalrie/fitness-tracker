@@ -21,37 +21,37 @@ class BodyMeasurementService
         return $bodyMeasurement;
     }
 
-    public function update(int    $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
+    public function update(int $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
                            ?float $bodyHeight = null): BodyMeasurement
     {
-        $oldBodyMeasurement = $this->bodyMeasurementRepository->findOneBy(['id' => $id]);
-        $newBodyMeasurement = $this->duplicateEntity($oldBodyMeasurement);
+        $bodyMeasurement = $this->show($id);
+
         if ($bodyWeight !== null) {
-            $newBodyMeasurement->setBodyWeight($bodyWeight);
+            $bodyMeasurement->setBodyWeight($bodyWeight);
         }
         if ($bmi !== null) {
-            $newBodyMeasurement->setBmi($bmi);
+            $bodyMeasurement->setBmi($bmi);
         }
         if ($fitnessEvaluation !== null) {
-            $newBodyMeasurement->setFitnessEvaluation($fitnessEvaluation);
+            $bodyMeasurement->setFitnessEvaluation($fitnessEvaluation);
         }
         if ($bodyHeight !== null) {
-            $newBodyMeasurement->setBodyHeight($bodyHeight);
+            $bodyMeasurement->setBodyHeight($bodyHeight);
         }
 
         $this->bodyMeasurementRepository->flush();
-        return $newBodyMeasurement;
+        return $bodyMeasurement;
     }
 
     public function delete(int $id): void
     {
-        $bodyMeasurement = $this->bodyMeasurementRepository->findOneBy(['id' => $id]);
+        $bodyMeasurement = $this->bodyMeasurementRepository->findBy(['id' => $id])[0];
         $this->bodyMeasurementRepository->remove($bodyMeasurement, true);
     }
 
     public function show(int $id): ?BodyMeasurement
     {
-        return $this->bodyMeasurementRepository->findOneBy(['id' => $id]);
+        return $this->bodyMeasurementRepository->findBy(['id' => $id])[0];
     }
 
     public function list(): array
@@ -64,10 +64,8 @@ class BodyMeasurementService
         return $bodyWeight / (pow($bodyHeight, 2));
     }
 
-    private function duplicateEntity(BodyMeasurement $bodyMeasurement): BodyMeasurement
+    public function getLatest(): BodyMeasurement
     {
-        return $this->create($bodyMeasurement->getFitnessEvaluation(),
-            $bodyMeasurement->getBodyWeight(), $bodyMeasurement->getBodyHeight(),
-            $bodyMeasurement->getBmi());
+        return $this->bodyMeasurementRepository->findOneBy([], ['createdAt' => 'DESC']);
     }
 }

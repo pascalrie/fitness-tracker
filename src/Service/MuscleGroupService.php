@@ -41,7 +41,7 @@ class MuscleGroupService
 
     public function show(int $id): ?MuscleGroup
     {
-        return $this->muscleGroupRepository->findOneBy(['id' => $id]);
+        return $this->muscleGroupRepository->findBy(['id' => $id])[0];
     }
 
     public function list(): array

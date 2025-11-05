@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Service\BodyMeasurementService;
 use App\Service\ExerciseService;
 use App\Service\PlanService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
