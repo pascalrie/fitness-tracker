@@ -2,25 +2,39 @@
 
 namespace App\Service;
 
+use App\Repository\WorkoutRepository;
+
 class WorkoutService
 {
-    public function create() {
+    protected WorkoutRepository $workoutRepository;
+
+    public function __construct(WorkoutRepository $workoutRepository)
+    {
 
     }
 
-    public function update() {
+    public function create()
+    {
 
     }
 
-    public function delete() {
+    public function update()
+    {
 
     }
 
-    public function show() {
+    public function delete()
+    {
 
     }
 
-    public function list() {
+    public function show()
+    {
+
+    }
+
+    public function list()
+    {
 
     }
 }

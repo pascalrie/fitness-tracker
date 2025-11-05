@@ -16,6 +16,10 @@ class MuscleGroup
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    public function __construct(string $name) {
+        $this->name = $name;
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -30,5 +34,11 @@ class MuscleGroup
 
     public function getId(): ?int {
         return $this->id;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return ['id' => $this->id,
+                'name' => $this->name];
     }
 }

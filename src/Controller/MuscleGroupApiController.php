@@ -2,40 +2,70 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\MuscleGroupService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class MuscleGroupApiController extends BaseApiController
 {
-    #[Route('/muscle/group/api/create', name: 'create_muscle_group_api', methods: ['POST'])]
-    public function create(): JsonResponse
+    protected MuscleGroupService $muscleGroupService;
+
+    public function __construct(EntityManagerInterface $entityManager, MuscleGroupService $muscleGroupService)
     {
-        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+        parent::__construct($entityManager);
+        $this->muscleGroupService = $muscleGroupService;
+    }
+
+    #[Route('/muscle/group/api/create', name: 'create_muscle_group_api', methods: ['POST'])]
+    public function create(Request $request): JsonResponse
+    {
+        $bodyParameters = json_decode($request->getContent());
+        $name = $bodyParameters->name;
+
+        $muscleGroup = $this->muscleGroupService->create($name);
+
+        return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
     #[Route('/muscle/group/api/list', name: 'list_muscle_group_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
-        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+        $muscleGroups = $this->muscleGroupService->list();
+        $groups = [];
+        foreach ($muscleGroups as $muscleGroup) {
+            $groups[] = $muscleGroup->jsonSerialize();
+        }
+        return $this->json($groups, Response::HTTP_OK);
     }
 
     #[Route('/muscle/group/api/show/{id}', name: 'show_muscle_group_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
-        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+        $muscleGroup = $this->muscleGroupService->show($id);
+        return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
     #[Route('/muscle/group/api/update/{id}', name: 'update_muscle_group_api', methods: ['PUT'])]
-    public function update(int $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+        $bodyParameters = json_decode($request->getContent());
+        $name = $bodyParameters->name;
+
+        $muscleGroup = $this->muscleGroupService->update($id, $name);
+        return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
     #[Route('/muscle/group/api/delete/{id}', name: 'delete_muscle_group_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
-        return $this->json(["not implemented"], Response::HTTP_NOT_IMPLEMENTED);
+        $this->muscleGroupService->delete($id);
+        $shouldBeNull = $this->muscleGroupService->show($id);
+        if (null !== $shouldBeNull) {
+            return $this->json("Deletion failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return $this->json("Deletion was successful.", Response::HTTP_OK);
     }
 }

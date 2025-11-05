@@ -16,28 +16,30 @@ class MuscleGroupRepository extends ServiceEntityRepository
         parent::__construct($registry, MuscleGroup::class);
     }
 
-    //    /**
-    //     * @return MuscleGroup[] Returns an array of MuscleGroup objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('m.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function add(MuscleGroup $muscleGroup, bool $flush = false): void
+    {
+        $this->persist($muscleGroup);
 
-    //    public function findOneBySomeField($value): ?MuscleGroup
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($flush) {
+            $this->flush();
+        }
+    }
+
+    public function remove(MuscleGroup $muscleGroup, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($muscleGroup);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function persist(MuscleGroup $muscleGroup): void {
+        $this->getEntityManager()->persist($muscleGroup);
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
 }

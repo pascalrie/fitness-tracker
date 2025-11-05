@@ -16,28 +16,30 @@ class PlanRepository extends ServiceEntityRepository
         parent::__construct($registry, Plan::class);
     }
 
-    //    /**
-    //     * @return Plan[] Returns an array of Plan objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function add(Plan $plan, bool $flush = false): void
+    {
+        $this->persist($plan);
 
-    //    public function findOneBySomeField($value): ?Plan
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($flush) {
+            $this->flush();
+        }
+    }
+
+    public function remove(Plan $plan, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($plan);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function persist(Plan $plan): void {
+        $this->getEntityManager()->persist($plan);
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
 }

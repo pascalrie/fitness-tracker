@@ -22,7 +22,7 @@ class Exercise
      * @var Collection<int, MuscleGroup>
      */
     #[ORM\ManyToMany(targetEntity: MuscleGroup::class)]
-    private Collection $muscleGroup;
+    private Collection $muscleGroups;
 
     /**
      * @var Collection<int, Set>
@@ -31,7 +31,7 @@ class Exercise
     private Collection $sets;
 
     #[ORM\Column]
-    private ?\DateTime $time = null;
+    private ?\DateTime $duration = null;
 
     #[ORM\Column]
     private ?float $weight = null;
@@ -51,7 +51,7 @@ class Exercise
 
     public function __construct()
     {
-        $this->muscleGroup = new ArrayCollection();
+        $this->muscleGroups = new ArrayCollection();
         $this->sets = new ArrayCollection();
         $this->plans = new ArrayCollection();
     }
@@ -59,15 +59,15 @@ class Exercise
     /**
      * @return Collection<int, MuscleGroup>
      */
-    public function getMuscleGroup(): Collection
+    public function getMuscleGroups(): Collection
     {
-        return $this->muscleGroup;
+        return $this->muscleGroups;
     }
 
     public function addMuscleGroup(MuscleGroup $muscleGroup): static
     {
-        if (!$this->muscleGroup->contains($muscleGroup)) {
-            $this->muscleGroup->add($muscleGroup);
+        if (!$this->muscleGroups->contains($muscleGroup)) {
+            $this->muscleGroups->add($muscleGroup);
         }
 
         return $this;
@@ -75,7 +75,7 @@ class Exercise
 
     public function removeMuscleGroup(MuscleGroup $muscleGroup): static
     {
-        $this->muscleGroup->removeElement($muscleGroup);
+        $this->muscleGroups->removeElement($muscleGroup);
 
         return $this;
     }
@@ -110,14 +110,14 @@ class Exercise
         return $this;
     }
 
-    public function getTime(): ?\DateTime
+    public function getDuration(): ?\DateTime
     {
-        return $this->time;
+        return $this->duration;
     }
 
-    public function setTime(\DateTime $time): static
+    public function setDuration(\DateTime $duration): static
     {
-        $this->time = $time;
+        $this->duration = $duration;
 
         return $this;
     }

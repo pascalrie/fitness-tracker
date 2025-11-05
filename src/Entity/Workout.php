@@ -6,6 +6,7 @@ use App\Repository\WorkoutRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[ORM\Entity(repositoryClass: WorkoutRepository::class)]
 class Workout
@@ -19,14 +20,15 @@ class Workout
     {
         return $this->id;
     }
+
     #[ORM\Column]
-    private ?\DateTime $day = null;
+    private ?\DateTime $dateOfWorkout = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $bodyWeight = null;
 
     #[ORM\Column]
-    private ?bool $stretch = null;
+    private ?bool $stretch = false;
 
     /**
      * @var Collection<int, Exercise>
@@ -34,24 +36,30 @@ class Workout
     #[ORM\OneToMany(targetEntity: Exercise::class, mappedBy: 'workout')]
     private Collection $exercises;
 
+    public function __construct(?bool $stretch = false, ?float $bodyWeight = null)
+    {
+        $this->dateOfWorkout = new \DateTime('NOW');
+        $this->stretch = $stretch;
+
+        if (null !== $bodyWeight) {
+            $this->bodyWeight = $bodyWeight;
+        }
+        $this->exercises = new ArrayCollection();
+    }
+
     public function getExercises(): ArrayCollection
     {
         return $this->exercises;
     }
 
-    public function __construct()
+    public function getDateOfWorkout(): ?\DateTime
     {
-        $this->exercises = new ArrayCollection();
+        return $this->dateOfWorkout;
     }
 
-    public function getDay(): ?\DateTime
+    public function setDateOfWorkout(\DateTime $dateOfWorkout): static
     {
-        return $this->day;
-    }
-
-    public function setDay(\DateTime $day): static
-    {
-        $this->day = $day;
+        $this->dateOfWorkout = $dateOfWorkout;
 
         return $this;
     }
@@ -100,5 +108,32 @@ class Workout
         }
 
         return $this;
+    }
+
+    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = false, bool $withStretch = true, bool $withExercises = true): array
+    {
+        $json = [
+            'id' => $this->id,
+        ];
+
+        if ($withDateOfWorkout) {
+            $json['dateOfWorkout'] = $this->dateOfWorkout->format('Y-m-d');
+        }
+
+        if ($withBodyWeight) {
+            $json['bodyWeight'] = $this->bodyWeight;
+        }
+
+        if ($withStretch) {
+            $json['stretch'] = $this->stretch;
+        }
+
+        if ($withExercises) {
+            foreach ($this->exercises as $exercise) {
+                $json['exercises'][] = $exercise->jsonSerialize(); // TODO: adjust Exercise->jsonSerialize
+            }
+        }
+
+        return $json;
     }
 }
