@@ -19,7 +19,7 @@ final class WorkoutApiController extends BaseApiController
         $this->workoutService = $workoutService;
     }
 
-    #[Route('/workout/create', name: 'create_workout_api', methods: ['POST'])]
+    #[Route('/workout/api/create', name: 'create_workout_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -30,7 +30,7 @@ final class WorkoutApiController extends BaseApiController
         return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/workout/create', name: 'create_workout_api', methods: ['GET'])]
+    #[Route('/workout/api/list', name: 'list_workout_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $workouts = $this->workoutService->list();
@@ -41,7 +41,7 @@ final class WorkoutApiController extends BaseApiController
         return $this->json($workoutArray, Response::HTTP_OK);
     }
 
-    #[Route('/workout/create', name: 'create_workout_api', methods: ['PUT'])]
+    #[Route('/workout/api/update/{id}', name: 'update_workout_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -52,7 +52,7 @@ final class WorkoutApiController extends BaseApiController
         return $this->json($updatedWorkout->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/workout/create', name: 'create_workout_api', methods: ['GET'])]
+    #[Route('/workout/api/show/{id}', name: 'show_workout_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $workout = $this->workoutService->show($id);

@@ -19,7 +19,7 @@ class MuscleGroupService
     public function create(string $name): MuscleGroup
     {
         $muscleGroup = new MuscleGroup($name);
-        $this->muscleGroupRepository->add($muscleGroup);
+        $this->muscleGroupRepository->add($muscleGroup, true);
         return $muscleGroup;
     }
 
@@ -46,6 +46,9 @@ class MuscleGroupService
     public function delete(int $id): void
     {
         $muscleGroup = $this->show($id);
+        if (!$muscleGroup) {
+            throw new EntityNotFoundException('Muscle Group with id ' . $id . ' not found for deletion.');
+        }
         $this->muscleGroupRepository->remove($muscleGroup, true);
     }
 

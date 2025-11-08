@@ -16,8 +16,15 @@ class ExerciseRepository extends ServiceEntityRepository
         parent::__construct($registry, Exercise::class);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function add(Exercise $exercise, bool $flush = false): void
     {
+        $shouldBeNull = $this->findOneBy(['uniqueName' => $exercise->getUniqueName()]);
+        if (null !== $shouldBeNull) {
+            throw new \Exception('Exercise already added');
+        }
         $this->persist($exercise);
 
         if ($flush) {

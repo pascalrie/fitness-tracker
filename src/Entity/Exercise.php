@@ -65,22 +65,22 @@ class Exercise
         return $this->executions;
     }
 
-    public function addSet(Execution $set): static
+    public function addExecution(Execution $execution): static
     {
-        if (!$this->executions->contains($set)) {
-            $this->executions->add($set);
-            $set->setExercise($this);
+        if (!$this->executions->contains($execution)) {
+            $this->executions->add($execution);
+            $execution->setExercise($this);
         }
 
         return $this;
     }
 
-    public function removeSet(Execution $set): static
+    public function removeExecution(Execution $execution): static
     {
-        if ($this->executions->removeElement($set)) {
+        if ($this->executions->removeElement($execution)) {
             // set the owning side to null (unless already changed)
-            if ($set->getExercise() === $this) {
-                $set->setExercise(null);
+            if ($execution->getExercise() === $this) {
+                $execution->setExercise(null);
             }
         }
 
@@ -196,7 +196,7 @@ class Exercise
         }
         if ($withExecutions) {
             foreach ($this->getExecutions() as $execution) {
-                $json += ['Muscle Group with id: ' . $execution->getId() => $execution->jsonSerialize()];
+                $json += ['Execution with id: ' . $execution->getId() => $execution->jsonSerialize()];
             }
         }
         if ($withPlans) {

@@ -19,7 +19,7 @@ class PlanService
     public function create(?int $totalDaysOfTraining = null, ?int $trainingTimesAWeek = null, ?int $split = null): Plan
     {
         $plan = new Plan($totalDaysOfTraining, $trainingTimesAWeek, $split);
-        $this->planRepository->add($plan);
+        $this->planRepository->add($plan, true);
         return $plan;
     }
 
@@ -57,6 +57,9 @@ class PlanService
     public function delete(int $id): void
     {
         $plan = $this->show($id);
+        if (!$plan) {
+            throw new EntityNotFoundException('Plan with id ' . $id . ' not found for deletion.');
+        }
         $this->planRepository->remove($plan, true);
     }
 

@@ -28,9 +28,9 @@ final class PlanApiController extends BaseApiController
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = json_decode($request->getContent());
-        $totalDaysOfTraining = $bodyParameters->totalDaysOfTraining;
-        $trainingTimesAWeek = $bodyParameters->trainingTimesAWeek;
-        $split = $bodyParameters->split;
+        $totalDaysOfTraining = (int) $bodyParameters->totalDaysOfTraining;
+        $trainingTimesAWeek = (int) $bodyParameters->trainingTimesAWeek;
+        $split = (int) $bodyParameters->split;
 
         $plan = $this->planService->create($totalDaysOfTraining, $trainingTimesAWeek, $split);
 

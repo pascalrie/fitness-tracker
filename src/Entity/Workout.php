@@ -110,7 +110,7 @@ class Workout
 
         if ($withExercises) {
             foreach ($this->exercises as $exercise) {
-                $json['exercises'][] = $exercise->jsonSerialize(); // TODO: adjust Exercise->jsonSerialize
+                $json['exercises'][] = $exercise->jsonSerialize();
             }
         }
 

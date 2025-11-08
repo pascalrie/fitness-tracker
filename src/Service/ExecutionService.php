@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Exercise;
 use App\Entity\Execution;
+use App\Entity\Workout;
 use App\Repository\ExecutionRepository;
 use Doctrine\ORM\EntityNotFoundException;
 
@@ -16,10 +17,10 @@ class ExecutionService
         $this->executionRepository = $executionRepository;
     }
 
-    public function create(Exercise $exercise, float $weight = 0, int $repetitions = 12): Execution
+    public function create(Exercise $exercise, Workout $workout, int $repetitions = 12, float $weight = 0): Execution
     {
-        $execution = new Execution($exercise, $weight, $repetitions);
-        $this->executionRepository->add($execution);
+        $execution = new Execution($exercise, $weight, $repetitions, $workout);
+        $this->executionRepository->add($execution, true);
         return $execution;
     }
 
@@ -50,7 +51,7 @@ class ExecutionService
     {
         $execution = $this->show($id);
         if (!$execution) {
-            throw new EntityNotFoundException('Execution with id ' . $id . ' not found');
+            throw new EntityNotFoundException('Execution with id ' . $id . ' not found for deletion.');
         }
         $this->executionRepository->remove($execution, true);
     }

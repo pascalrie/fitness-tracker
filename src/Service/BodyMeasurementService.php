@@ -52,6 +52,9 @@ class BodyMeasurementService
     public function delete(int $id): void
     {
         $bodyMeasurement = $this->bodyMeasurementRepository->findBy(['id' => $id])[0];
+        if (!$bodyMeasurement) {
+            throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found for deletion.');
+        }
         $this->bodyMeasurementRepository->remove($bodyMeasurement, true);
     }
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\ExerciseService;
 use App\Service\ExecutionService;
+use App\Service\WorkoutService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,11 +18,15 @@ final class ExecutionApiController extends BaseApiController
 
     protected ExerciseService $exerciseService;
 
-    public function __construct(EntityManagerInterface $entityManager, ExecutionService $executionService, ExerciseService $exerciseService)
+    protected WorkoutService $workoutService;
+
+    public function __construct(EntityManagerInterface $entityManager, ExecutionService $executionService,
+                                ExerciseService $exerciseService, WorkoutService $workoutService)
     {
         parent::__construct($entityManager);
         $this->executionService = $executionService;
         $this->exerciseService = $exerciseService;
+        $this->workoutService = $workoutService;
     }
 
     /**
@@ -34,9 +39,12 @@ final class ExecutionApiController extends BaseApiController
         $exerciseName = $bodyParameters->exerciseName;
         $repetitions = $bodyParameters->repetitions;
         $weight = $bodyParameters->weight;
+        $workoutId = $bodyParameters->workoutId;
+
+        $workout = $this->workoutService->show($workoutId);
 
         $exercise = $this->exerciseService->showByUniqueName($exerciseName);
-        $execution = $this->executionService->create($exercise, $weight, $repetitions);
+        $execution = $this->executionService->create($exercise, $workout, $repetitions, $weight);
 
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }

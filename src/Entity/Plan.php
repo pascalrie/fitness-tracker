@@ -155,7 +155,7 @@ class Plan
 
         if ($withExercises) {
             foreach ($this->getExercises() as $exercise) {
-                $json += ['Exercise with id: ' . $exercise->getId() => $exercise->jsonSerialize()]; //TODO: adjust JsonSerialize
+                $json += ['Exercise with id: ' . $exercise->getId() => $exercise->jsonSerialize()];
             }
         }
 

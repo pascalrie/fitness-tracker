@@ -21,7 +21,7 @@ class WorkoutService
     public function create(?bool $stretch = null, ?float $bodyWeight = null): Workout
     {
         $workout = new Workout($stretch, $bodyWeight);
-        $this->workoutRepository->add($workout);
+        $this->workoutRepository->add($workout, true);
         return $workout;
     }
 
@@ -52,6 +52,9 @@ class WorkoutService
     public function delete(int $id): void
     {
         $workout = $this->workoutRepository->findBy(['id' => $id])[0];
+        if (!$workout) {
+            throw new EntityNotFoundException('Workout with id ' . $id . ' not found for deletion.');
+        }
         $this->workoutRepository->remove($workout, true);
     }
 

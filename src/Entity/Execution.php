@@ -37,12 +37,13 @@ class Execution
     #[ORM\JoinColumn(nullable: false)]
     private ?Workout $workout = null;
 
-    public function __construct(Exercise $exercise, float $weight = 0, ?int $repetitions = 12)
+    public function __construct(Exercise $exercise, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
     {
         $this->createdAt = new \DateTimeImmutable('NOW');
         $this->exercise = $exercise;
         $this->weight = $weight;
         $this->repetitions = $repetitions;
+        $this->workout = $workout;
     }
     public function getRepetitions(): ?int
     {
@@ -68,7 +69,7 @@ class Execution
         return $this;
     }
 
-    public function jsonSerialize(bool $withRepetitions = true, $withWeight = true, bool $withExercise = true): array
+    public function jsonSerialize(bool $withRepetitions = true, $withWeight = true, bool $withExercise = true, bool $withWorkout = true): array
     {
         $json = [
             'id' => $this->id,
@@ -84,7 +85,11 @@ class Execution
         }
 
         if ($withExercise) {
-            $json['exercise'] = $this->getExercise()->jsonSerialize(); // TODO: implement jsonSerialize of Exercise
+            $json['exercise'] = $this->getExercise()->jsonSerialize();
+        }
+
+        if ($withWorkout) {
+            $json['workout'] = $this->getWorkout()->jsonSerialize();
         }
 
         return $json;
