@@ -45,6 +45,7 @@ class Execution
         $this->repetitions = $repetitions;
         $this->workout = $workout;
     }
+
     public function getRepetitions(): ?int
     {
         return $this->repetitions;
