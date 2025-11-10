@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\ExerciseService;
 use App\Service\PlanService;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,7 @@ final class PlanApiController extends BaseApiController
         $this->exerciseService = $exerciseService;
     }
 
-    #[Route('/plan/api/create', name: 'create_plan_api', methods: ['POST'])]
+    #[Route('/api/plan/create', name: 'create_plan_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = json_decode($request->getContent());
@@ -37,7 +38,7 @@ final class PlanApiController extends BaseApiController
         return $this->json($plan->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/plan/api/list', name: 'list_plan_api', methods: ['GET'])]
+    #[Route('/api/plan/list', name: 'list_plan_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $plans = $this->planService->list();
@@ -48,7 +49,7 @@ final class PlanApiController extends BaseApiController
         return $this->json($plansArray, Response::HTTP_OK);
     }
 
-    #[Route('/plan/api/show/{id}', name: 'show_plan_api', methods: ['GET'])]
+    #[Route('/api/plan/show/{id}', name: 'show_plan_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $plan = $this->planService->show($id);
@@ -56,9 +57,9 @@ final class PlanApiController extends BaseApiController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    #[Route('/plan/api/update/{id}', name: 'update_plan_api', methods: ['PUT'])]
+    #[Route('/api/plan/update/{id}', name: 'update_plan_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -76,7 +77,7 @@ final class PlanApiController extends BaseApiController
         return $this->json($newPlan->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/plan/api/delete/{id}', name: 'delete_plan_api', methods: ['DELETE'])]
+    #[Route('/api/plan/delete/{id}', name: 'delete_plan_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->planService->delete($id);

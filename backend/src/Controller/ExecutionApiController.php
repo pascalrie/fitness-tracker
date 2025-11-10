@@ -21,7 +21,7 @@ final class ExecutionApiController extends BaseApiController
     protected WorkoutService $workoutService;
 
     public function __construct(EntityManagerInterface $entityManager, ExecutionService $executionService,
-                                ExerciseService $exerciseService, WorkoutService $workoutService)
+                                ExerciseService        $exerciseService, WorkoutService $workoutService)
     {
         parent::__construct($entityManager);
         $this->executionService = $executionService;
@@ -32,24 +32,23 @@ final class ExecutionApiController extends BaseApiController
     /**
      * @throws Exception
      */
-    #[Route('/execution/api/create', name: 'create_execution_api', methods: ['POST'])]
+    #[Route('/api/execution/create', name: 'create_execution_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
-        $exerciseName = $bodyParameters->exerciseName;
+        $exerciseId = $bodyParameters->exerciseName;
         $repetitions = $bodyParameters->repetitions;
         $weight = $bodyParameters->weight;
-        $workoutId = $bodyParameters->workoutId;
 
-        $workout = $this->workoutService->show($workoutId);
-
-        $exercise = $this->exerciseService->showByUniqueName($exerciseName);
+        // always use the latest workout (by id) => you need to create a workout first
+        $workout = $this->workoutService->findLatest();
+        $exercise = $this->exerciseService->show($exerciseId);
         $execution = $this->executionService->create($exercise, $workout, $repetitions, $weight);
 
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/execution/api/list', name: 'list_execution_api', methods: ['GET'])]
+    #[Route('/api/execution/list', name: 'list_execution_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $executions = $this->executionService->list();
@@ -63,7 +62,7 @@ final class ExecutionApiController extends BaseApiController
     /**
      * @throws Exception
      */
-    #[Route('/execution/api/update/{id}', name: 'update_execution_api', methods: ['PUT'])]
+    #[Route('/api/execution/update/{id}', name: 'update_execution_api', methods: ['PUT'])]
     public function update(int $id, Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -76,14 +75,14 @@ final class ExecutionApiController extends BaseApiController
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/execution/api/show/{id}', name: 'show_execution_api', methods: ['GET'])]
+    #[Route('/api/execution/show/{id}', name: 'show_execution_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $execution = $this->executionService->show($id);
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/execution/api/delete/{id}', name: 'delete_execution_api', methods: ['DELETE'])]
+    #[Route('/apiexecution/delete/{id}', name: 'delete_execution_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->executionService->delete($id);

@@ -67,4 +67,9 @@ class WorkoutService
     {
         return $this->workoutRepository->findAll();
     }
+
+    public function findLatest(): Workout
+    {
+        return $this->workoutRepository->findOneBy([], ['id' => 'DESC']);
+    }
 }

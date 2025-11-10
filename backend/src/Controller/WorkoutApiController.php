@@ -19,18 +19,18 @@ final class WorkoutApiController extends BaseApiController
         $this->workoutService = $workoutService;
     }
 
-    #[Route('/workout/api/create', name: 'create_workout_api', methods: ['POST'])]
+    #[Route('/api/workout/create', name: 'create_workout_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
         $stretch = (bool) $bodyParameters->stretch;
-        $bodyWeight = (float) $bodyParameters->weight;
+        $bodyWeight = (float) $bodyParameters->bodyWeight;
 
         $workout = $this->workoutService->create($stretch, $bodyWeight);
         return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/workout/api/list', name: 'list_workout_api', methods: ['GET'])]
+    #[Route('/api/workout/list', name: 'list_workout_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $workouts = $this->workoutService->list();
@@ -41,7 +41,7 @@ final class WorkoutApiController extends BaseApiController
         return $this->json($workoutArray, Response::HTTP_OK);
     }
 
-    #[Route('/workout/api/update/{id}', name: 'update_workout_api', methods: ['PUT'])]
+    #[Route('/api/workout/update/{id}', name: 'update_workout_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -52,14 +52,14 @@ final class WorkoutApiController extends BaseApiController
         return $this->json($updatedWorkout->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/workout/api/show/{id}', name: 'show_workout_api', methods: ['GET'])]
+    #[Route('/api/workout/show/{id}', name: 'show_workout_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $workout = $this->workoutService->show($id);
         return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/workout/api/delete/{id}', name: 'delete_workout_api', methods: ['DELETE'])]
+    #[Route('/api/workout/delete/{id}', name: 'delete_workout_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->workoutService->delete($id);

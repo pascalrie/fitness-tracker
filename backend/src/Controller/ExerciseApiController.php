@@ -39,7 +39,7 @@ final class ExerciseApiController extends BaseApiController
     /**
      * @throws \Exception
      */
-    #[Route('/exercise/api/create', name: 'create_exercise_api', methods: ['POST'])]
+    #[Route('/api/exercise/create', name: 'create_exercise_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -50,7 +50,7 @@ final class ExerciseApiController extends BaseApiController
         return $this->json($exercise->jsonSerialize(false), Response::HTTP_OK);
     }
 
-    #[Route('/exercise/api/list', name: 'list_exercise_api', methods: ['GET'])]
+    #[Route('/api/exercise/list', name: 'list_exercise_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $exercises = $this->exerciseService->list();
@@ -61,14 +61,14 @@ final class ExerciseApiController extends BaseApiController
         return $this->json($list, Response::HTTP_OK);
     }
 
-    #[Route('/exercise/api/show/{id}', name: 'show_exercise_api', methods: ['GET'])]
+    #[Route('/api/exercise/show/{id}', name: 'show_exercise_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $exercise = $this->exerciseService->show($id);
         return $this->json($exercise->jsonSerialize(true, true, true), Response::HTTP_OK);
     }
 
-    #[Route('/exercise/api/update/{id}', name: 'update_exercise_api', methods: ['PUT'])]
+    #[Route('/api/exercise/update/{id}', name: 'update_exercise_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -88,7 +88,7 @@ final class ExerciseApiController extends BaseApiController
         return $this->json($exercise->jsonSerialize(true, true, true), Response::HTTP_OK);
     }
 
-    #[Route('/exercise/api/delete/{id}', name: 'delete_exercise_api', methods: ['DELETE'])]
+    #[Route('/api/exercise/delete/{id}', name: 'delete_exercise_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->exerciseService->delete($id);

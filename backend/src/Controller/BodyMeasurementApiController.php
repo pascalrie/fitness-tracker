@@ -19,7 +19,7 @@ final class BodyMeasurementApiController extends BaseApiController
         $this->bodyMeasurementService = $bodyMeasurementService;
     }
 
-    #[Route('/body/measurement/api/create', name: 'create_body_measurement_api', methods: ['POST'])]
+    #[Route('/api/body/measurement/create', name: 'create_body_measurement_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -33,7 +33,7 @@ final class BodyMeasurementApiController extends BaseApiController
         return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/body/measurement/api/list', name: 'list_body_measurement_api', methods: ['GET'])]
+    #[Route('/api/body/measurement/list', name: 'list_body_measurement_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $bodyMeasurements = $this->bodyMeasurementService->list();
@@ -44,14 +44,14 @@ final class BodyMeasurementApiController extends BaseApiController
         return $this->json($measurements, Response::HTTP_OK);
     }
 
-    #[Route('/body/measurement/api/show/{id}', name: 'show_body_measurement_api', methods: ['GET'])]
+    #[Route('/api/body/measurement/show/{id}', name: 'show_body_measurement_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $bodyMeasurement = $this->bodyMeasurementService->show($id);
         return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/body/measurement/api/update/{id}', name: 'update_body_measurement_api', methods: ['PUT'])]
+    #[Route('/api/body/measurement/update/{id}', name: 'update_body_measurement_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -64,7 +64,7 @@ final class BodyMeasurementApiController extends BaseApiController
         return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/body/measurement/api/delete/{id}', name: 'delete_body_measurement_api', methods: ['DELETE'])]
+    #[Route('/api/body/measurement/delete/{id}', name: 'delete_body_measurement_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->bodyMeasurementService->delete($id);

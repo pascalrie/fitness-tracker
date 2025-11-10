@@ -19,7 +19,7 @@ final class MuscleGroupApiController extends BaseApiController
         $this->muscleGroupService = $muscleGroupService;
     }
 
-    #[Route('/muscle/group/api/create', name: 'create_muscle_group_api', methods: ['POST'])]
+    #[Route('/api/muscle/group/create', name: 'create_muscle_group_api', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -30,7 +30,7 @@ final class MuscleGroupApiController extends BaseApiController
         return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/muscle/group/api/list', name: 'list_muscle_group_api', methods: ['GET'])]
+    #[Route('/api/muscle/group/list', name: 'list_muscle_group_api', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $muscleGroups = $this->muscleGroupService->list();
@@ -41,14 +41,14 @@ final class MuscleGroupApiController extends BaseApiController
         return $this->json($groups, Response::HTTP_OK);
     }
 
-    #[Route('/muscle/group/api/show/{id}', name: 'show_muscle_group_api', methods: ['GET'])]
+    #[Route('/api/muscle/group/show/{id}', name: 'show_muscle_group_api', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
         $muscleGroup = $this->muscleGroupService->show($id);
         return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/muscle/group/api/update/{id}', name: 'update_muscle_group_api', methods: ['PUT'])]
+    #[Route('/api/muscle/group/update/{id}', name: 'update_muscle_group_api', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
@@ -59,7 +59,7 @@ final class MuscleGroupApiController extends BaseApiController
         return $this->json($muscleGroup->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/muscle/group/api/delete/{id}', name: 'delete_muscle_group_api', methods: ['DELETE'])]
+    #[Route('/api/muscle/group/delete/{id}', name: 'delete_muscle_group_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->muscleGroupService->delete($id);
