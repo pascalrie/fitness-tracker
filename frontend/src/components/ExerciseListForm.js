@@ -1,12 +1,9 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import NestedJsonViewer from "./RenderObjectsOrArrays";
 import {useNavigate} from "react-router-dom";
 
 const ExerciseListForm = () => {
     const [exercises, setExercises] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     let navigate = useNavigate();
     const routeChange = () => {

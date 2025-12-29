@@ -6,8 +6,6 @@ import {useNavigate} from "react-router-dom";
 const PlanListForm = () => {
     const [plans, setPlans] = useState([]);
     const [payload, setPayload] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     let navigate = useNavigate();
     const routeChange = () => {
