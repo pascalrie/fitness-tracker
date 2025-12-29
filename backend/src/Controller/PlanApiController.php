@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Plan;
 use App\Service\ExerciseService;
 use App\Service\PlanService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,8 +44,9 @@ final class PlanApiController extends BaseApiController
     {
         $plans = $this->planService->list();
         $plansArray = [];
+        /** @var Plan $plan */
         foreach ($plans as $plan) {
-            $plansArray[] = $plan->jsonSerialize();
+            $plansArray[] = $plan->jsonSerialize(true);
         }
         return $this->json($plansArray, Response::HTTP_OK);
     }
@@ -67,14 +69,15 @@ final class PlanApiController extends BaseApiController
         $newTotalDaysOfTraining = $bodyParameters->totalDaysOfTraining;
         $newTrainingTimesAWeek = $bodyParameters->trainingTimesAWeek;
         $newSplit = $bodyParameters->split;
+        $isActive = $bodyParameters->isActive;
 
         $exercises = [];
         foreach ($newExercises as $exercise) {
             $exercises[] = $this->exerciseService->showByUniqueName($exercise);
         }
 
-        $newPlan = $this->planService->update($id, $newTotalDaysOfTraining, $newTrainingTimesAWeek, $newSplit, $exercises);
-        return $this->json($newPlan->jsonSerialize(), Response::HTTP_OK);
+        $newPlan = $this->planService->update($id, $isActive, $newTotalDaysOfTraining, $newTrainingTimesAWeek, $newSplit, $exercises);
+        return $this->json($newPlan->jsonSerialize(true), Response::HTTP_OK);
     }
 
     #[Route('/api/plan/delete/{id}', name: 'delete_plan_api', methods: ['DELETE'])]

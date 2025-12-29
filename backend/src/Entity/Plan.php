@@ -154,8 +154,9 @@ class Plan
         ];
 
         if ($withExercises) {
+            $json['exercises'] = [];
             foreach ($this->getExercises() as $exercise) {
-                $json += ['Exercise with id: ' . $exercise->getId() => $exercise->jsonSerialize()];
+                $json['exercises'][] = $exercise->jsonSerialize(true, false, false, false);
             }
         }
 

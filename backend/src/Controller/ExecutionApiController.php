@@ -36,13 +36,12 @@ final class ExecutionApiController extends BaseApiController
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
-        $exerciseId = $bodyParameters->exerciseName;
+        $exerciseName = $bodyParameters->exerciseName;
         $repetitions = $bodyParameters->repetitions;
         $weight = $bodyParameters->weight;
-
         // always use the latest workout (by id) => you need to create a workout first
         $workout = $this->workoutService->findLatest();
-        $exercise = $this->exerciseService->show($exerciseId);
+        $exercise = $this->exerciseService->showByUniqueName($exerciseName);
         $execution = $this->executionService->create($exercise, $workout, $repetitions, $weight);
 
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
@@ -82,7 +81,7 @@ final class ExecutionApiController extends BaseApiController
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }
 
-    #[Route('/apiexecution/delete/{id}', name: 'delete_execution_api', methods: ['DELETE'])]
+    #[Route('/api/execution/delete/{id}', name: 'delete_execution_api', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $this->executionService->delete($id);

@@ -49,7 +49,7 @@ const ContactPage = () => {
                         required
                     />
                 </label>
-                <button type="submit">
+                <button>
                     Send Message
                 </button>
                 <strong className={styles['form-note']}>

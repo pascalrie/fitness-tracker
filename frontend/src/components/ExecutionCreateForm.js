@@ -14,7 +14,6 @@ const ExecutionCreateForm = () => {
         const fetchExerciseNames = async() => {
             try {
                 const response = await axios.get("https://backend-fitness-tracker-v5.ddev.site/api/exercise/list");
-                console.log(response);
                 const data = response.data;
                 if (Array.isArray(data)) {
                     setExercises(data);
@@ -42,7 +41,7 @@ const ExecutionCreateForm = () => {
         setIsSubmitting(true);
         try {
             const executionData = {
-                exerciseName: selectedExercise.id,
+                exerciseName: selectedExercise.uniqueName,
                 repetitions: repetitions,
                 weight: weight
             };

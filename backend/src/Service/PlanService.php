@@ -20,10 +20,13 @@ class PlanService
     {
         $plan = new Plan($totalDaysOfTraining, $trainingTimesAWeek, $split);
         $this->planRepository->add($plan, true);
+        if ($plan->getId() > 1) {
+            $this->update($plan->getId() - 1, false);
+        }
         return $plan;
     }
 
-    public function update(int  $id, ?int $newTotalDaysOfTraining = null, ?int $newTrainingTimesAWeek = null,
+    public function update(int  $id, bool $isActive, ?int $newTotalDaysOfTraining = null, ?int $newTrainingTimesAWeek = null,
                            ?int $newSplit = null, array $newExercises = null): Plan
     {
         $plan = $this->show($id);
@@ -47,6 +50,8 @@ class PlanService
                 $plan->addExercise($newExercise);
             }
         }
+
+        $plan->setActive($isActive);
 
         $plan->setUpdatedAt(new \DateTime('NOW'));
         $this->planRepository->flush();
