@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 const ExerciseListForm = () => {
     const [exercises, setExercises] = useState([]);
 
+
     let navigate = useNavigate();
     const routeChange = () => {
         let path = "/create/exercise";

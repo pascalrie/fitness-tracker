@@ -91,4 +91,11 @@ final class PlanApiController extends BaseApiController
         }
         return $this->json('Deletion was successful.', Response::HTTP_OK);
     }
+
+    #[Route('api/plan/latest', name: 'list_plan_api_latest', methods: ['GET'])]
+    public function showLatest(): JsonResponse
+    {
+        $plan = $this->planService->showLatest();
+        return $this->json($plan->jsonSerialize(true), Response::HTTP_OK);
+    }
 }

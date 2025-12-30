@@ -38,6 +38,9 @@ const MenuBar = () => {
                                     <li>
                                         <Link to="/plan">Plans</Link>
                                     </li>
+                                    <li>
+                                        <Link to="/body/measurement">Measurements</Link>
+                                    </li>
                                 </ul>
                             )}
                         </div>

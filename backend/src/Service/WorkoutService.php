@@ -20,6 +20,10 @@ class WorkoutService
 
     public function create(?bool $stretch = null, ?float $bodyWeight = null): Workout
     {
+        $bodyWeightFromBodyMeasurement = $this->bodyMeasurementService->getLatest()->getBodyWeight();
+        if (null === $bodyWeight) {
+            $bodyWeight = $bodyWeightFromBodyMeasurement;
+        }
         $workout = new Workout($stretch, $bodyWeight);
         $this->workoutRepository->add($workout, true);
         return $workout;

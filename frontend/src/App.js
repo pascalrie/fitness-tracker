@@ -12,6 +12,9 @@ import ExecutionListForm from "./components/ExecutionListForm";
 import PlanCreateForm from "./components/PlanCreateForm";
 import ExerciseListForm from "./components/ExerciseListForm";
 import ExerciseCreateForm from "./components/ExerciseCreateForm";
+import WorkoutListForm from "./components/WorkoutListForm";
+import BodyMeasurementListForm from "./components/BodyMeasurementListForm";
+import BodyMeasurementCreateForm from "./components/BodyMeasurementCreateForm";
 
 function App() {
   return (
@@ -21,7 +24,7 @@ function App() {
             <Routes>
                 <Route path="/create/execution" element={<ExecutionCreateForm/>}/>
                 <Route path="/plan" element={<PlanListForm/>}/>
-                <Route path="show/active/plan" element={<PlanShowActiveForm/>}/>
+                <Route path="/show/active/plan" element={<PlanShowActiveForm/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/contact" element={<ContactPage/>}/>
                 <Route path="/home" element={<HomePage/>}/>
@@ -29,7 +32,10 @@ function App() {
                 <Route path="/executions" element={<ExecutionListForm/>}/>
                 <Route path="/create/plan" element={<PlanCreateForm/>}/>
                 <Route path="/exercises" element={<ExerciseListForm/>}/>
-                <Route path="create/exercise" element={<ExerciseCreateForm/>}/>
+                <Route path="/create/exercise" element={<ExerciseCreateForm/>}/>
+                <Route path="/workouts" element={<WorkoutListForm/>}/>
+                <Route path="/body/measurement" element={<BodyMeasurementListForm/>}/>
+                <Route path="/create/body/measurement/" element={<BodyMeasurementCreateForm/>}/>
             </Routes>
         </Router>
     </div>
@@ -41,5 +47,4 @@ export default App;
  <Route path="/workouts" element={<WorkoutListForm/>}/>
                 <Route path="/show/execution/:id" element={<ExecutionShowForm/>}/>
                 <Route path="/muscle/group" element={<MuscleGroupListForm/>}/>
-                <Route path="/body/measurement" element={<BodyMeasurementListForm/>}/>
  */

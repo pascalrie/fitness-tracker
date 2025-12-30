@@ -12,6 +12,7 @@ const PlanListForm = () => {
         let path = "/create/plan";
         navigate(path);
     }
+
     useEffect(() => {
         const fetchPlans = async () => {
             try {

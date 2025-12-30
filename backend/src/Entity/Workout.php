@@ -90,7 +90,7 @@ class Workout
         return $this;
     }
     // TODO: Signatur bei Aufrufen anpassen
-    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = false, bool $withStretch = true, bool $withExercises = true, bool $withExecutions = false): array
+    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = true, bool $withStretch = true, bool $withExercises = true, bool $withExecutions = false): array
     {
         $json = [
             'id' => $this->id,

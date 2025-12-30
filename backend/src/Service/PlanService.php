@@ -73,6 +73,11 @@ class PlanService
         return $this->planRepository->findOneBy(['id' => $id]);
     }
 
+    public function showLatest(): ?Plan
+    {
+        return $this->planRepository->findOneBy([], ['createdAt' => 'DESC']);
+    }
+
     public function list(): array
     {
         return $this->planRepository->findAll();
