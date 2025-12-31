@@ -28,7 +28,10 @@ class BodyMeasurementService
     public function update(int    $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
                            ?float $bodyHeight = null): BodyMeasurement
     {
+
         $bodyMeasurement = $this->show($id);
+        $bodyMeasurement->setUpdatedAt(new \DateTime());
+
         if (!$bodyMeasurement) {
             throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found');
         }

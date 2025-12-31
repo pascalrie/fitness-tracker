@@ -53,7 +53,7 @@ const ExecutionListForm = () => {
                             <p>Exercise: {execution.exercise.uniqueName}</p>
                             <p>Repetitions: {execution.repetitions}</p>
                             <p>Weight: {execution.weight} kg</p>
-                            <p>Workout-id: {execution.workout.id}</p>
+                            <p>Workout-id: {execution.id}</p>
                         </li>
                     ))}
                 </ul>
