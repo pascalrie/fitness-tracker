@@ -23,8 +23,8 @@ final class WorkoutApiController extends BaseApiController
     public function create(Request $request): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
-        $stretch = (bool) $bodyParameters->stretch;
-        $bodyWeight = (float) $bodyParameters->bodyWeight;
+        $stretch = (bool)$bodyParameters->stretch;
+        $bodyWeight = (float)$bodyParameters->bodyWeight;
 
         $workout = $this->workoutService->create($stretch, $bodyWeight);
         return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
@@ -45,8 +45,8 @@ final class WorkoutApiController extends BaseApiController
     public function update(Request $request, int $id): JsonResponse
     {
         $bodyParameters = $this->getBodyParameters($request);
-        $updatedStretch = (bool) $bodyParameters->stretch;
-        $updatedBodyWeight = (float) $bodyParameters->weight;
+        $updatedStretch = (bool)$bodyParameters->stretch;
+        $updatedBodyWeight = (float)$bodyParameters->weight;
 
         $updatedWorkout = $this->workoutService->update($id, $updatedStretch, $updatedBodyWeight);
         return $this->json($updatedWorkout->jsonSerialize(), Response::HTTP_OK);
@@ -68,5 +68,12 @@ final class WorkoutApiController extends BaseApiController
             return $this->json('Deletion of Workout with id: ' . $id . ' failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json('Deletion was successful.', Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/latest', name: 'show_latest_workout_api', methods: ['GET'])]
+    public function showLatest(): JsonResponse
+    {
+        $workout = $this->workoutService->findLatest();
+        return $this->json($workout->jsonSerialize(true, true, true, true, true), Response::HTTP_OK);
     }
 }

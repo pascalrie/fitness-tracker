@@ -58,6 +58,17 @@ final class ExecutionApiController extends BaseApiController
         return $this->json($executionsArray, Response::HTTP_OK);
     }
 
+    #[Route('/api/execution/list/{workoutId}', name: 'list_execution_workout_api', methods: ['GET'])]
+    public function listForWorkout(int $workoutId): JsonResponse
+    {
+        $executions = $this->executionService->showBy('workoutId', $workoutId);
+        $executionsArray = [];
+        foreach ($executions as $execution) {
+            $executionsArray[] = $execution->jsonSerialize();
+        }
+        return $this->json($executionsArray, Response::HTTP_OK);
+    }
+
     /**
      * @throws Exception
      */

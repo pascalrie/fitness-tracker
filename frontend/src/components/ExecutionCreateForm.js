@@ -16,6 +16,7 @@ const ExecutionCreateForm = () => {
         const [isList, setIsList] = useState(false);
 
         let navigate = useNavigate();
+
         const routeChange = () => {
             let path = "/executions";
             setIsList(true);
@@ -70,23 +71,23 @@ const ExecutionCreateForm = () => {
             }
 
             setIsSubmitting(true);
-            try {
-                const executionData = {
-                    exerciseName: selectedExercise.uniqueName,
-                    repetitions: repetitions,
-                    weight: weight
-                };
+            if (!isList) {
+                try {
+                    const executionData = {
+                        exerciseName: selectedExercise.uniqueName,
+                        repetitions: repetitions,
+                        weight: weight
+                    };
 
-                await axios.post("https://backend-fitness-tracker-v5.ddev.site/api/execution/create", executionData);
-                alert("Execution created successfully");
-                setSelectedExercise("");
-            } catch (error) {
-                if (!isList) {
+                    await axios.post("https://backend-fitness-tracker-v5.ddev.site/api/execution/create", executionData);
+                    alert("Execution created successfully");
+                    setSelectedExercise("");
+                } catch (error) {
                     console.error("Error creating execution: ", error);
                     alert("Failed to create execution. Please try again.");
+                } finally {
+                    setIsSubmitting(false);
                 }
-            } finally {
-                setIsSubmitting(false);
             }
         }
 

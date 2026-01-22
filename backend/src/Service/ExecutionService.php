@@ -65,4 +65,9 @@ class ExecutionService
     {
         return $this->executionRepository->findAll();
     }
+
+    public function showBy(string $identifier, int $value): array
+    {
+        return $this->executionRepository->findBy([$identifier => $value]);
+    }
 }

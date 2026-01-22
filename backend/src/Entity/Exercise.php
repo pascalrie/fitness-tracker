@@ -186,22 +186,22 @@ class Exercise
 
         if ($withMuscleGroups) {
             foreach ($this->getMuscleGroups() as $muscleGroup) {
-                $json += ['Muscle Group with id: ' . $muscleGroup->getId() => $muscleGroup->jsonSerialize()];
+                $json['muscleGroups'][] = $muscleGroup->jsonSerialize();
             }
         }
         if ($withWorkouts) {
             foreach ($this->getWorkouts() as $workout) {
-                $json += ['Workout with id: ' . $workout->getId() => $workout->jsonSerialize()];
+                $json['workouts'][] = $workout->jsonSerialize();
             }
         }
         if ($withExecutions) {
             foreach ($this->getExecutions() as $execution) {
-                $json += ['Execution with id: ' . $execution->getId() => $execution->jsonSerialize()];
+                $json['executions'][] = $execution->jsonSerialize();
             }
         }
         if ($withPlans) {
             foreach ($this->getPlans() as $plan) {
-                $json += ['Plan with id: ' . $plan->getId() => $plan->jsonSerialize()];
+                $json['plans'][] = $plan->jsonSerialize();
             }
         }
 

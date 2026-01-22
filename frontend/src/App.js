@@ -15,6 +15,7 @@ import ExerciseCreateForm from "./components/ExerciseCreateForm";
 import WorkoutListForm from "./components/WorkoutListForm";
 import BodyMeasurementListForm from "./components/BodyMeasurementListForm";
 import BodyMeasurementCreateForm from "./components/BodyMeasurementCreateForm";
+import WorkoutCreateForm from "./components/WorkoutCreateForm";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/create/exercise" element={<ExerciseCreateForm/>}/>
                 <Route path="/workouts" element={<WorkoutListForm/>}/>
                 <Route path="/body/measurement" element={<BodyMeasurementListForm/>}/>
+                <Route path="/create/workout" element={<WorkoutCreateForm/>}/>
                 <Route path="/create/body/measurement/" element={<BodyMeasurementCreateForm/>}/>
             </Routes>
         </Router>

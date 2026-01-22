@@ -1,6 +1,3 @@
-import {useEffect, useState} from "react";
-import axios from "axios";
-
 const ExecutionListLatest = (executions) => {
     const reversedExecutions = [...executions.executions].reverse().slice(0, 5);
     return (

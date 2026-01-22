@@ -54,7 +54,7 @@ class MuscleGroup
 
         if ($withExercises) {
             foreach ($this->getExercises() as $exercise) {
-                $json += ['Exercise with id: ' . $exercise->getId() => $exercise->jsonSerialize()];
+                $json['exercises'][] = $exercise->jsonSerialize();
             }
         }
 
