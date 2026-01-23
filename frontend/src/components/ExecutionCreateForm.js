@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import "../styles/ExecutionCreateForm.css";
-import ExecutionListLatest from "./ExecutionListLatest";
 import {useNavigate} from "react-router-dom";
+import WorkoutListLatest from "./WorkoutListLatest";
 
 const ExecutionCreateForm = () => {
         const [repetitions, setRepetitions] = useState(12);
@@ -12,8 +12,9 @@ const ExecutionCreateForm = () => {
         const [exercises, setExercises] = useState([]);
         const [selectedExercise, setSelectedExercise] = useState(null);
 
-        const [executions, setExecutions] = useState([]);
         const [isList, setIsList] = useState(false);
+
+        const [workout, setLatestWorkout] = useState(null);
 
         let navigate = useNavigate();
 
@@ -43,24 +44,22 @@ const ExecutionCreateForm = () => {
             }
             fetchExerciseNames();
 
-            const fetchExecutions = async () => {
+            const fetchLatestWorkout = async () => {
                 try {
-                    const response = await axios.get("https://backend-fitness-tracker-v5.ddev.site/api/execution/list");
+                    const response = await axios.get("https://backend-fitness-tracker-v5.ddev.site/api/workout/latest");
                     const data = response.data;
-                    if (Array.isArray(data)) {
-                        setExecutions(data);
-                    } else if (typeof data === "object") {
-                        const executionsArray = Object.values(data).filter((executions) => typeof executions === "object");
-                        setExecutions(executionsArray);
+                    if (typeof data === "object") {
+                        setLatestWorkout(data);
                     } else {
-                        console.error("Unexpected data format for executions.", data);
+                        console.error("Unexpected data format for latest workout.", data);
                     }
                 } catch (error) {
-                    console.error("Error fetching Executions: ", error);
-                    setExecutions([]);
+                    console.error("Error fetching latest workout: ", error);
+                    setLatestWorkout(null);
                 }
             }
-            fetchExecutions();
+            fetchLatestWorkout();
+
         }, []);
 
         const handleSubmit = async (e) => {
@@ -148,7 +147,7 @@ const ExecutionCreateForm = () => {
                 >
                     {isSubmitting ? "Creating..." : "Create Execution"}
                 </button>
-                <ExecutionListLatest executions={executions}></ExecutionListLatest>
+                {workout === null ? "Loading..." : <WorkoutListLatest workout={workout}></WorkoutListLatest>}
                 <button color="primary" className="px-4" onClick={routeChange} typeof="button">List all</button>
             </form>
         );
