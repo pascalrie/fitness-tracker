@@ -37,6 +37,10 @@ class Execution
     #[ORM\JoinColumn(nullable: false)]
     private ?Workout $workout = null;
 
+    #[ORM\ManyToOne(inversedBy: 'execution')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Set $associatedSet = null;
+
     public function __construct(Exercise $exercise, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
     {
         $this->createdAt = new \DateTimeImmutable('NOW');
@@ -128,6 +132,18 @@ class Execution
     public function setWorkout(?Workout $workout): static
     {
         $this->workout = $workout;
+
+        return $this;
+    }
+
+    public function getAssociatedSet(): ?Set
+    {
+        return $this->associatedSet;
+    }
+
+    public function setAssociatedSet(?Set $associatedSet): static
+    {
+        $this->associatedSet = $associatedSet;
 
         return $this;
     }

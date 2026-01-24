@@ -47,6 +47,12 @@ class Exercise
     #[ORM\ManyToMany(targetEntity: MuscleGroup::class, mappedBy: 'exercises')]
     private Collection $muscleGroups;
 
+    /**
+     * @var Collection<int, Set>
+     */
+    #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'exercise')]
+    private Collection $sets;
+
     public function __construct(string $uniqueName)
     {
         $this->uniqueName = $uniqueName;
@@ -55,6 +61,7 @@ class Exercise
         $this->plans = new ArrayCollection();
         $this->workouts = new ArrayCollection();
         $this->muscleGroups = new ArrayCollection();
+        $this->sets = new ArrayCollection();
     }
 
     /**
@@ -206,5 +213,35 @@ class Exercise
         }
 
         return $json;
+    }
+
+    /**
+     * @return Collection<int, Set>
+     */
+    public function getSets(): Collection
+    {
+        return $this->sets;
+    }
+
+    public function addSet(Set $set): static
+    {
+        if (!$this->sets->contains($set)) {
+            $this->sets->add($set);
+            $set->setExercise($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSet(Set $set): static
+    {
+        if ($this->sets->removeElement($set)) {
+            // set the owning side to null (unless already changed)
+            if ($set->getExercise() === $this) {
+                $set->setExercise(null);
+            }
+        }
+
+        return $this;
     }
 }

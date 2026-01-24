@@ -42,6 +42,12 @@ class Workout
     #[ORM\ManyToMany(targetEntity: Exercise::class, mappedBy: 'workouts')]
     private Collection $exercises;
 
+    /**
+     * @var Collection<int, Set>
+     */
+    #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'workout', orphanRemoval: true)]
+    private Collection $sets;
+
     public function __construct(?bool $stretch = false, ?float $bodyWeight = null)
     {
         $this->dateOfWorkout = new \DateTime('NOW');
@@ -52,6 +58,7 @@ class Workout
         }
         $this->exercises = new ArrayCollection();
         $this->executions = new ArrayCollection();
+        $this->sets = new ArrayCollection();
     }
 
     public function getDateOfWorkout(): ?\DateTime
@@ -174,6 +181,36 @@ class Workout
     {
         if ($this->exercises->removeElement($exercise)) {
             $exercise->removeWorkout($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Set>
+     */
+    public function getSets(): Collection
+    {
+        return $this->sets;
+    }
+
+    public function addSet(Set $set): static
+    {
+        if (!$this->sets->contains($set)) {
+            $this->sets->add($set);
+            $set->setWorkout($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSet(Set $set): static
+    {
+        if ($this->sets->removeElement($set)) {
+            // set the owning side to null (unless already changed)
+            if ($set->getWorkout() === $this) {
+                $set->setWorkout(null);
+            }
         }
 
         return $this;
