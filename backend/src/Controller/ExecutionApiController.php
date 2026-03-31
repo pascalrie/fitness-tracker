@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\ExerciseService;
 use App\Service\ExecutionService;
+use App\Service\SetService;
 use App\Service\WorkoutService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -20,13 +21,16 @@ final class ExecutionApiController extends BaseApiController
 
     protected WorkoutService $workoutService;
 
+    protected SetService $setService;
+
     public function __construct(EntityManagerInterface $entityManager, ExecutionService $executionService,
-                                ExerciseService        $exerciseService, WorkoutService $workoutService)
+                                ExerciseService        $exerciseService, WorkoutService $workoutService, SetService $setService)
     {
         parent::__construct($entityManager);
         $this->executionService = $executionService;
         $this->exerciseService = $exerciseService;
         $this->workoutService = $workoutService;
+        $this->setService = $setService;
     }
 
     /**
@@ -39,10 +43,13 @@ final class ExecutionApiController extends BaseApiController
         $exerciseName = $bodyParameters->exerciseName;
         $repetitions = $bodyParameters->repetitions;
         $weight = $bodyParameters->weight;
+        $setId = $bodyParameters->setId;
+
+        $set = $this->setService->show($setId);
         // always use the latest workout (by id) => you need to create a workout first
         $workout = $this->workoutService->findLatest();
         $exercise = $this->exerciseService->showByUniqueName($exerciseName);
-        $execution = $this->executionService->create($exercise, $workout, $repetitions, $weight);
+        $execution = $this->executionService->create($exercise, $workout, $set, $repetitions, $weight);
 
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }

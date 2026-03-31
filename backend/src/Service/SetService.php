@@ -27,7 +27,7 @@ class SetService
         if ($repetitions !== null) {
             $set->setRepetitions($repetitions);
         }
-        $this->setRepository->add($set);
+        $this->setRepository->add($set, true);
         return $set;
     }
 

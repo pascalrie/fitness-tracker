@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Exercise;
 use App\Entity\Execution;
+use App\Entity\Set;
 use App\Entity\Workout;
 use App\Repository\ExecutionRepository;
 use Doctrine\ORM\EntityNotFoundException;
@@ -17,9 +18,9 @@ class ExecutionService
         $this->executionRepository = $executionRepository;
     }
 
-    public function create(Exercise $exercise, Workout $workout, int $repetitions = 12, float $weight = 0): Execution
+    public function create(Exercise $exercise, Workout $workout, Set $set, int $repetitions = 12, float $weight = 0): Execution
     {
-        $execution = new Execution($exercise, $weight, $repetitions, $workout);
+        $execution = new Execution($exercise, $set, $weight, $repetitions, $workout);
         $this->executionRepository->add($execution, true);
         return $execution;
     }

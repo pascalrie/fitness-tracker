@@ -41,13 +41,14 @@ class Execution
     #[ORM\JoinColumn(nullable: false)]
     private ?Set $associatedSet = null;
 
-    public function __construct(Exercise $exercise, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
+    public function __construct(Exercise $exercise, Set $set, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
     {
         $this->createdAt = new \DateTimeImmutable('NOW');
         $this->exercise = $exercise;
         $this->weight = $weight;
         $this->repetitions = $repetitions;
         $this->workout = $workout;
+        $this->associatedSet = $set;
     }
 
     public function getRepetitions(): ?int
@@ -74,7 +75,7 @@ class Execution
         return $this;
     }
 
-    public function jsonSerialize(bool $withRepetitions = true, $withWeight = true, bool $withExercise = true, bool $withWorkout = true): array
+    public function jsonSerialize(bool $withRepetitions = true, bool $withWeight = true, bool $withExercise = true, bool $withWorkout = true, bool $withSet = true): array
     {
         $json = [
             'id' => $this->id,
@@ -95,6 +96,10 @@ class Execution
 
         if ($withWorkout) {
             $json['workout'] = $this->getWorkout()->jsonSerialize();
+        }
+
+        if ($withSet) {
+            $json['set'] = $this->getAssociatedSet()->jsonSerialize();
         }
 
         return $json;

@@ -1,18 +1,29 @@
-
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
-
-###> symfony/mailer ###
-  mailer:
-    image: axllent/mailpit
-    ports:
-      - "1025"
-      - "8025"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html:rw,cached
+      - ./php.ini:/usr/local/etc/php/php.ini
     environment:
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
-###< symfony/mailer ###
+      - APP_ENV=dev
+    ports:
+      - "8081:81"
+    depends_on:
+      - db
+  db:
+    environment:
+      MYSQL_DATABASE: fitness-tracker-v5-db
+      MYSQL_USER: db
+      MYSQL_PASSWORD: db
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3308:3308"
+volumes:
+  db_data:
+networks:
+  symfony-network:
+    driver: bridge

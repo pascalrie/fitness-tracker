@@ -2,18 +2,16 @@
 
 namespace App\Controller;
 
-use App\Controller\BaseApiController;
 use App\Service\ExerciseService;
 use App\Service\SetService;
 use App\Service\WorkoutService;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class SetApiController extends BaseApiController
+final class SetApiController extends BaseApiController
 {
     protected SetService $setService;
 
@@ -42,12 +40,12 @@ class SetApiController extends BaseApiController
 
         $exercise = $this->exerciseService->showByUniqueName($exerciseName);
         $workout = $this->workoutService->findLatest();
-        $set = $this->setService->create($exercise, $workout, $repetitions);
+        $set = $this->setService->create($exercise, $workout, (int) $repetitions);
         return $this->json($set->jsonSerialize(), Response::HTTP_OK);
     }
 
     #[Route('/api/set/list', name: 'list_set_api', methods: ['GET'])]
-    public function list(int $setId): JsonResponse
+    public function list(): JsonResponse
     {
         $sets = $this->setService->list();
         $setsArray = [];
