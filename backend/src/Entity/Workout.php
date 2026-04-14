@@ -48,6 +48,9 @@ class Workout
     #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'workout', orphanRemoval: true)]
     private Collection $sets;
 
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
     public function __construct(?bool $stretch = false, ?float $bodyWeight = null)
     {
         $this->dateOfWorkout = new \DateTime('NOW');
@@ -212,6 +215,18 @@ class Workout
                 $set->setWorkout(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

@@ -84,7 +84,6 @@ final class SetApiController extends BaseApiController
         $newRepetitions = $bodyParameters->repetitions;
         $addExecution = $bodyParameters->executionId;
         $workout = $bodyParameters->workoutId;
-
         $exercise = $this->exerciseService->showByUniqueName($newExerciseName);
         $updatedSet = $this->setService->update($id, $exercise, $addExecution, $newRepetitions, $workout);
 

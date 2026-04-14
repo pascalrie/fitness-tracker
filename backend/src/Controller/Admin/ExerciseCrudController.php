@@ -2,15 +2,11 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\BodyMeasurement;
 use App\Entity\Exercise;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\HttpFoundation\Response;
 
 class ExerciseCrudController extends AbstractCrudController
 {
@@ -22,18 +18,23 @@ class ExerciseCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')->hideWhenCreating()->hideWhenUpdating(),
             TextField::new('uniqueName'),
             AssociationField::new('executions')
-                ->setCrudController(ExecutionCrudController::class),
+                ->setCrudController(ExecutionCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
             AssociationField::new('plans')
-                ->setCrudController(PlanCrudController::class),
+                ->setCrudController(PlanCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
             AssociationField::new('workouts')
-                ->setCrudController(WorkoutCrudController::class),
+                ->setCrudController(WorkoutCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
             AssociationField::new('muscleGroups')
-                ->setCrudController(MuscleGroupCrudController::class),
+                ->setCrudController(MuscleGroupCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'name']),
             AssociationField::new('sets')
-                ->setCrudController(SetCrudController::class),
+                ->setCrudController(SetCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
         ];
     }
 }

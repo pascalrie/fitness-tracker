@@ -39,6 +39,9 @@ class Set
     #[ORM\JoinColumn(nullable: false)]
     private ?Workout $workout = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
     public function __construct()
     {
         $this->executions = new ArrayCollection();
@@ -168,5 +171,17 @@ class Set
         }
 
         return $json;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
+
+        return $this;
     }
 }

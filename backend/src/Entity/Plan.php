@@ -45,6 +45,9 @@ class Plan
     #[ORM\Column]
     private ?bool $active = false;
 
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
     public function __construct(?int $daysOfTraining = null, ?int $trainingTimesAWeek = 3, ?int $split = 1, bool $active = true)
     {
         $this->exercises = new ArrayCollection();
@@ -187,6 +190,18 @@ class Plan
     public function setActive(bool $active): static
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }

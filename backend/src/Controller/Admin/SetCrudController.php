@@ -23,16 +23,19 @@ class SetCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')->hideWhenCreating()->hideWhenUpdating(),
             AssociationField::new('exercise')
-                ->setCrudController(ExerciseCrudController::class),
+                ->setCrudController(ExerciseCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'uniqueName']),
             AssociationField::new('executions')
-                ->setCrudController(ExecutionCrudController::class),
-            DatetimeField::new('createdAt'),
-            DatetimeField::new('updatedAt'),
+                ->setCrudController(ExecutionCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'id']),
+            DatetimeField::new('createdAt')->hideWhenCreating()->hideWhenUpdating(),
+            DatetimeField::new('updatedAt')->hideWhenCreating()->hideWhenUpdating(),
             IntegerField::new('repetitions'),
             AssociationField::new('workout')
-                ->setCrudController(WorkoutCrudController::class),
+                ->setCrudController(WorkoutCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'id']),
         ];
     }
 }

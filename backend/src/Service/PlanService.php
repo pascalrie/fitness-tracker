@@ -19,6 +19,8 @@ class PlanService
     public function create(?int $totalDaysOfTraining = null, ?int $trainingTimesAWeek = null, ?int $split = null): Plan
     {
         $plan = new Plan($totalDaysOfTraining, $trainingTimesAWeek, $split);
+        $plan = $this->buildIdentifier($plan);
+
         $this->planRepository->add($plan, true);
         if ($plan->getId() > 1) {
             $this->update($plan->getId() - 1, false);
@@ -54,6 +56,7 @@ class PlanService
         $plan->setActive($isActive);
 
         $plan->setUpdatedAt(new \DateTime('NOW'));
+        $plan = $this->buildIdentifier($plan);
         $this->planRepository->flush();
 
         return $plan;
@@ -81,5 +84,16 @@ class PlanService
     public function list(): array
     {
         return $this->planRepository->findAll();
+    }
+
+    public function buildIdentifier(Plan $plan): Plan
+    {
+        $datetime = $plan->getStartDate()->format('d-m-YY');
+        $split = $plan->getSplit();
+        $active = $plan->isActive();
+
+        $plan->setIdentifier('Active: ' . $active . 'Split: ' . $split . 'Date: ' . $datetime);
+
+        return $plan;
     }
 }

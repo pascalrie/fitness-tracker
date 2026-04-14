@@ -53,7 +53,7 @@ class Exercise
     #[ORM\OneToMany(targetEntity: Set::class, mappedBy: 'exercise')]
     private Collection $sets;
 
-    public function __construct(string $uniqueName)
+    public function __construct(string $uniqueName = null)
     {
         $this->uniqueName = $uniqueName;
 

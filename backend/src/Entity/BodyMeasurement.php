@@ -31,7 +31,7 @@ class BodyMeasurement
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
 
-    public function __construct(?float $bodyWeight, ?float $bmi, ?int $fitnessEvaluation, ?float $bodyHeight)
+    public function __construct(?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null, ?float $bodyHeight = null)
     {
         if (null !== $bodyWeight) {
             $this->bodyWeight = $bodyWeight;

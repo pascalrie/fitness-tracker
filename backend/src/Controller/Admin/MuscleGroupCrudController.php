@@ -21,10 +21,11 @@ class MuscleGroupCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('name'),
+            IdField::new('id')->hideWhenCreating()->hideWhenUpdating(),
+            TextField::new('name')->setRequired(true),
             AssociationField::new('exercises')
-                ->setCrudController(ExerciseCrudController::class),
+                ->setCrudController(ExerciseCrudController::class)
+                ->setFormTypeOptions(['choice_label' => 'uniqueName']),
         ];
     }
 }

@@ -24,7 +24,7 @@ class MuscleGroup
     #[ORM\ManyToMany(targetEntity: Exercise::class, inversedBy: 'muscleGroups')]
     private Collection $exercises;
 
-    public function __construct(string $name)
+    public function __construct(string $name = "")
     {
         $this->name = $name;
         $this->exercises = new ArrayCollection();

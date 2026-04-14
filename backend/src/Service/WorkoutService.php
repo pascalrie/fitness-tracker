@@ -25,6 +25,8 @@ class WorkoutService
             $bodyWeight = $bodyWeightFromBodyMeasurement;
         }
         $workout = new Workout($stretch, $bodyWeight);
+        $workout = $this->buildIdentifier($workout);
+
         $this->workoutRepository->add($workout, true);
         return $workout;
     }
@@ -47,6 +49,7 @@ class WorkoutService
             }
         }
         $workout->setBodyWeight($bodyWeight);
+        $workout = $this->buildIdentifier($workout);
 
         $this->workoutRepository->flush();
 
@@ -75,5 +78,14 @@ class WorkoutService
     public function findLatest(): Workout
     {
         return $this->workoutRepository->findOneBy([], ['id' => 'DESC']);
+    }
+
+    public function buildIdentifier(Workout $workout): Workout
+    {
+        $datetime = $workout->getDateOfWorkout()->format('d-m-YY');
+
+        $workout->setIdentifier($datetime);
+
+        return $workout;
     }
 }

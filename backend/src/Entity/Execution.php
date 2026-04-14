@@ -41,14 +41,21 @@ class Execution
     #[ORM\JoinColumn(nullable: false)]
     private ?Set $associatedSet = null;
 
-    public function __construct(Exercise $exercise, Set $set, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
+    public function __construct(Exercise $exercise = null, Set $set = null, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
     {
         $this->createdAt = new \DateTimeImmutable('NOW');
-        $this->exercise = $exercise;
+        if ($exercise !== null) {
+            $this->exercise = $exercise;
+        }
+        if ($set !== null) {
+            $this->associatedSet = $set;
+        }
         $this->weight = $weight;
         $this->repetitions = $repetitions;
         $this->workout = $workout;
-        $this->associatedSet = $set;
     }
 
     public function getRepetitions(): ?int
@@ -149,6 +156,18 @@ class Execution
     public function setAssociatedSet(?Set $associatedSet): static
     {
         $this->associatedSet = $associatedSet;
+
+        return $this;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
 
         return $this;
     }
