@@ -6,6 +6,7 @@ use App\Entity\Exercise;
 use App\Entity\MuscleGroup;
 use App\Repository\MuscleGroupRepository;
 use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 
 class MuscleGroupService
 {
@@ -23,6 +24,9 @@ class MuscleGroupService
         return $muscleGroup;
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(int $id, ?string $newName = null, ?array $newExercises = []): MuscleGroup
     {
         $muscleGroup = $this->show($id);
@@ -30,6 +34,9 @@ class MuscleGroupService
             throw new EntityNotFoundException('MuscleGroup with id ' . $id . ' not found');
         }
         if (null !== $newName) {
+            if ($this->showByUniqueName($newName) !== null) {
+                throw new Exception('MuscleGroup with name ' . $newName . ' already exists');
+            }
             $muscleGroup->setName($newName);
         }
         if (null !== $newExercises) {
@@ -60,5 +67,17 @@ class MuscleGroupService
     public function list(): array
     {
         return $this->muscleGroupRepository->findAll();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function showByUniqueName(string $name): ?MuscleGroup
+    {
+        if (count($this->muscleGroupRepository->findBy(['uniqueName' => $name])) > 1) {
+            throw new Exception('Unique name of muscle group exists multiple times. Please check that.');
+        }
+
+        return $this->muscleGroupRepository->findBy(['uniqueName' => $name])[0];
     }
 }

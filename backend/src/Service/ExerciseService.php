@@ -6,7 +6,9 @@ use App\Entity\Execution;
 use App\Entity\Exercise;
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Exception\DuplicateFieldException;
 use Exception;
+use http\Exception\InvalidArgumentException;
 
 class ExerciseService
 {
@@ -27,6 +29,9 @@ class ExerciseService
         return $exercise;
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(int   $id, string $newUniqueName = null, array $executions = [], array $plans = [],
                            array $workouts = [], array $muscleGroups = []): Exercise
     {
@@ -35,6 +40,10 @@ class ExerciseService
             throw new EntityNotFoundException('Exercise with id ' . $id . ' not found');
         }
         if (null !== $newUniqueName) {
+            if ($this->showByUniqueName($newUniqueName) !== null) {
+                throw new Exception('Unique name must remain unique.
+                Please choose another unique name.');
+            }
             $exercise->setUniqueName($newUniqueName);
         }
         if (null !== $executions) {

@@ -18,6 +18,8 @@ class BodyMeasurementService
     public function create(int $fitnessEvaluation, float $bodyWeight, float $bodyHeight, float $bmi): BodyMeasurement
     {
         $bodyMeasurement = new BodyMeasurement($bodyWeight, $bmi, $fitnessEvaluation, $bodyHeight);
+        $bodyMeasurement = $this->buildIdentifier($bodyMeasurement);
+
         $this->bodyMeasurementRepository->add($bodyMeasurement, true);
         return $bodyMeasurement;
     }
@@ -31,6 +33,7 @@ class BodyMeasurementService
 
         $bodyMeasurement = $this->show($id);
         $bodyMeasurement->setUpdatedAt(new \DateTime());
+        $bodyMeasurement = $this->buildIdentifier($bodyMeasurement);
 
         if (!$bodyMeasurement) {
             throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found');
@@ -73,11 +76,24 @@ class BodyMeasurementService
 
     public function calculateBmi(float $bodyWeight, float $bodyHeight): float
     {
-        return $bodyWeight / (pow($bodyHeight, 2));
+        return round($bodyWeight / (pow($bodyHeight, 2)), 3);
     }
 
     public function getLatest(): BodyMeasurement
     {
         return $this->bodyMeasurementRepository->findOneBy([], ['createdAt' => 'DESC']);
+    }
+
+
+    public function buildIdentifier(BodyMeasurement $bodyMeasurement): BodyMeasurement
+    {
+        $weight = $bodyMeasurement->getBodyWeight();
+        $height = $bodyMeasurement->getBodyHeight();
+        $fitnessEvaluation = $bodyMeasurement->getFitnessEvaluation();
+        $updatedAt = $bodyMeasurement->getUpdatedAt()->format('d-m-YY H:i:s');
+
+        $bodyMeasurement->setIdentifier('Fitness Eval: ' . $fitnessEvaluation . ' Weight: ' . $weight . ' Height: ' . $height . ' (' . $updatedAt . ')');
+
+        return $bodyMeasurement;
     }
 }

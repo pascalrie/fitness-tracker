@@ -29,7 +29,7 @@ class ExecutionService
     /**
      * @throws \Exception
      */
-    public function update(int $id, ?Exercise $exercise = null, float $weight = 0, ?int $repetitions = null): Execution
+    public function update(int $id, ?Exercise $exercise = null, float $weight = null, ?int $repetitions = null): Execution
     {
         $execution = $this->show($id);
         if (!$execution) {
@@ -76,10 +76,11 @@ class ExecutionService
 
     public function buildIdentifier(Execution $execution): Execution
     {
-        $datetime = $execution->getCreatedAt()->format('d-m-YY H:i:s');
+        $datetime = $execution->getCreatedAt()->format('d-m-Y H:i:s');
         $weight = $execution->getWeight();
+        $repetitions = $execution->getRepetitions();
         $exerciseName = $execution->getExercise()->getUniqueName();
-        $execution->setIdentifier($exerciseName . ' Weight: ' . $weight . ' (' . $datetime . ')');
+        $execution->setIdentifier($exerciseName . ' Weight: ' . $weight . 'Repetitions: ' . $repetitions . ' (' . $datetime . ')');
 
         return $execution;
     }

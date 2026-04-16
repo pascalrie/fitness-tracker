@@ -82,7 +82,7 @@ class WorkoutService
 
     public function buildIdentifier(Workout $workout): Workout
     {
-        $datetime = $workout->getDateOfWorkout()->format('d-m-YY');
+        $datetime = $workout->getDateOfWorkout()->format('d-m-Y');
 
         $workout->setIdentifier($datetime);
 

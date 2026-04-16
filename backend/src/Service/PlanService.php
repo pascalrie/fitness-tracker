@@ -88,7 +88,7 @@ class PlanService
 
     public function buildIdentifier(Plan $plan): Plan
     {
-        $datetime = $plan->getStartDate()->format('d-m-YY');
+        $datetime = $plan->getStartDate()->format('d-m-Y');
         $split = $plan->getSplit();
         $active = $plan->isActive();
 

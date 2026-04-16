@@ -31,6 +31,9 @@ class BodyMeasurement
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $identifier = null;
+
     public function __construct(?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null, ?float $bodyHeight = null)
     {
         if (null !== $bodyWeight) {
@@ -155,5 +158,17 @@ class BodyMeasurement
         }
 
         return $json;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
+
+        return $this;
     }
 }

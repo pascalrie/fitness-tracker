@@ -34,7 +34,7 @@ class SetService
         return $set;
     }
 
-    public function update(int $setId, ?Exercise $exercise, ?Execution $addExecution, ?int $repetitions = 0, ?Workout $workout = null): Set
+    public function update(int $setId, ?Exercise $exercise = null, ?Execution $addExecution = null, ?int $repetitions = 0, ?Workout $workout = null): Set
     {
         $set = $this->show($setId);
         $set->setUpdatedAt(new \DateTime('NOW'));
@@ -83,7 +83,7 @@ class SetService
 
     public function buildIdentifier(Set $set): Set
     {
-        $datetime = $set->getUpdatedAt()->format('d-m-YY H:i:s');
+        $datetime = $set->getUpdatedAt()->format('d-m-Y H:i:s');
         $workout = $set->getWorkout()->getId();
         $exerciseName = $set->getExercise()->getUniqueName();
         $set->setIdentifier($exerciseName . ' Workout Id: ' . $workout . ' (' . $datetime . ')');
