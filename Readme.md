@@ -50,10 +50,10 @@ zu erstellen und die Durchführung festzuhalten.
 ```ddev exec app php bin/console debug:router```
 
 #### 3.2 Auf Server im Browser zugreifen (nach ```ddev start```):
-- https://fitness-tracker-v5-backend.ddev.site  
+- https://backend.ddev.site/ 
 
 #### 3.2.1 Zugriff auf das Easyadmin-Dashboard: /admin-Route nutzen
-- https://fitness-tracker-v5-backend.ddev.site/admin
+- https://backend.ddev.site/admin
 
 ### 4. Ausführen der Tests im Terminal (im Backend-Ordner):
 ```./vendor/bin/phpunit```
