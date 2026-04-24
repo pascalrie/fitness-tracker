@@ -73,13 +73,12 @@ class BodyMeasurementServiceTest extends TestCase
         $this->bodyMeasurement->setBodyWeight(79);
         $this->bodyMeasurement->setFitnessEvaluation(85);
 
-        $bodyMeasurement = $this->bodyMeasurementService->buildIdentifier($this->bodyMeasurement);
+        $this->bodyMeasurement->buildIdentifier($this->bodyMeasurement);
 
-        $this->assertNotNull($bodyMeasurement);
-        $this->assertNotEmpty($bodyMeasurement->getIdentifier());
-        $this->assertTrue(str_contains($bodyMeasurement->getIdentifier(), 80.0));
-        $this->assertTrue(str_contains($bodyMeasurement->getIdentifier(), 79));
-        $this->assertTrue(str_contains($bodyMeasurement->getIdentifier(), 85));
+        $this->assertNotEmpty($this->bodyMeasurement->getIdentifier());
+        $this->assertTrue(str_contains($this->bodyMeasurement->getIdentifier(), 80.0));
+        $this->assertTrue(str_contains($this->bodyMeasurement->getIdentifier(), 79));
+        $this->assertTrue(str_contains($this->bodyMeasurement->getIdentifier(), 85));
     }
 
     /**

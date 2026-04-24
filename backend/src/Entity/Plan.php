@@ -48,7 +48,7 @@ class Plan
     #[ORM\Column(length: 255)]
     private ?string $identifier = null;
 
-    public function __construct(?int $daysOfTraining = null, ?int $trainingTimesAWeek = 3, ?int $split = 1, bool $active = true)
+    public function __construct(?int $daysOfTraining = null, ?int $trainingTimesAWeek = 3, ?int $split = 1, bool $active = true, ?string $identifier = null)
     {
         $this->exercises = new ArrayCollection();
         $this->startDate = new \DateTime('NOW');
@@ -57,6 +57,7 @@ class Plan
         $this->trainingTimesAWeek = $trainingTimesAWeek;
         $this->split = $split;
         $this->active = $active;
+        $this->buildIdentifier();
     }
 
     public function getId(): ?int
@@ -148,7 +149,7 @@ class Plan
         return $this;
     }
 
-    public function jsonSerialize(bool $withExercises = false, bool $withTotalDaysOfTraining = true, bool $withTrainingTimesAWeek = true, bool $withSplit = true, bool $withActive = true): array
+    public function jsonSerialize(bool $withExercises = false, bool $withTotalDaysOfTraining = true, bool $withTrainingTimesAWeek = true, bool $withSplit = true, bool $withActive = true, bool $withIdentifier = true): array
     {
         $json = [
             'id' => $this->id,
@@ -179,6 +180,10 @@ class Plan
             $json['active'] = $this->active;
         }
 
+        if ($withIdentifier) {
+            $json['identifier'] = $this->identifier;
+        }
+
         return $json;
     }
 
@@ -204,5 +209,14 @@ class Plan
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    public function buildIdentifier(): void
+    {
+        $datetime = $this->getStartDate()->format('d-m-Y');
+        $split = $this->getSplit();
+        $active = $this->isActive();
+
+        $this->setIdentifier('Active: ' . $active . ' Split: ' . $split . ' Date: ' . $datetime);
     }
 }

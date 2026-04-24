@@ -23,11 +23,12 @@ class BodyMeasurementCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideWhenCreating()->hideWhenUpdating(),
             NumberField::new('bodyWeight'),
-            NumberField::new('bmi'),
+            NumberField::new('bmi')->hideWhenCreating()->hideWhenUpdating(),
             NumberField::new('fitnessEvaluation'),
             NumberField::new('bodyHeight'),
             DateTimeField::new('createdAt')->hideWhenCreating()->hideWhenUpdating(),
             DateTimeField::new('updatedAt')->hideWhenCreating()->hideWhenUpdating(),
+            TextField::new('identifier')->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 }

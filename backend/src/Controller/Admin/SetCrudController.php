@@ -29,13 +29,14 @@ class SetCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['choice_label' => 'uniqueName']),
             AssociationField::new('executions')
                 ->setCrudController(ExecutionCrudController::class)
-                ->setFormTypeOptions(['choice_label' => 'id']),
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
             DatetimeField::new('createdAt')->hideWhenCreating()->hideWhenUpdating(),
             DatetimeField::new('updatedAt')->hideWhenCreating()->hideWhenUpdating(),
             IntegerField::new('repetitions'),
             AssociationField::new('workout')
                 ->setCrudController(WorkoutCrudController::class)
-                ->setFormTypeOptions(['choice_label' => 'id']),
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
+            TextField::new('identifier')->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 }

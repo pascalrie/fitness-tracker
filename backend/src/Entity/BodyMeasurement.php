@@ -34,7 +34,7 @@ class BodyMeasurement
     #[ORM\Column(length: 255)]
     private ?string $identifier = null;
 
-    public function __construct(?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null, ?float $bodyHeight = null)
+    public function __construct(?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null, ?float $bodyHeight = null,  ?string $identifier = null)
     {
         if (null !== $bodyWeight) {
             $this->bodyWeight = $bodyWeight;
@@ -51,9 +51,9 @@ class BodyMeasurement
         if (null !== $bodyHeight) {
             $this->bodyHeight = $bodyHeight;
         }
-
         $this->setCreatedAt(new \DateTimeImmutable('NOW'));
         $this->setUpdatedAt(new \DateTime('NOW'));
+        $this->buildIdentifier();
     }
 
     public function getId(): ?int
@@ -133,7 +133,7 @@ class BodyMeasurement
         return $this;
     }
 
-    public function jsonSerialize(bool $withBodyWeight = true, bool $withBmi = true, bool $withFitnessEvaluation = true, bool $withBodyHeight = true): array
+    public function jsonSerialize(bool $withBodyWeight = true, bool $withBmi = true, bool $withFitnessEvaluation = true, bool $withBodyHeight = true, bool $withIdentifier = true): array
     {
         $json = [
             'id' => $this->id,
@@ -157,6 +157,10 @@ class BodyMeasurement
             $json['bodyHeight'] = $this->bodyHeight;
         }
 
+        if ($withIdentifier) {
+            $json['identifier'] = $this->getIdentifier();
+        }
+
         return $json;
     }
 
@@ -170,5 +174,15 @@ class BodyMeasurement
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    public function buildIdentifier(): void
+    {
+        $weight = $this->getBodyWeight();
+        $height = $this->getBodyHeight();
+        $fitnessEvaluation = $this->getFitnessEvaluation();
+        $updatedAt = $this->getUpdatedAt()->format('d-m-Y H:i:s');
+
+        $this->setIdentifier('Fitness Eval: ' . $fitnessEvaluation . ' Weight: ' . $weight . ' Height: ' . $height . ' (' . $updatedAt . ')');
     }
 }

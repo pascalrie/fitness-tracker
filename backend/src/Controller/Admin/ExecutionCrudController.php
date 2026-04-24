@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ExecutionCrudController extends AbstractCrudController
 {
@@ -29,10 +30,11 @@ class ExecutionCrudController extends AbstractCrudController
             NumberField::new('weight'),
             AssociationField::new('workout')
                 ->setCrudController(WorkoutCrudController::class)
-                ->setFormTypeOptions(['choice_label' => 'identifier'])->hideWhenCreating()->hideWhenUpdating(),
+                ->setFormTypeOptions(['choice_label' => 'identifier']),
             AssociationField::new('associatedSet')
                 ->setCrudController(SetCrudController::class)
                 ->setFormTypeOptions(['choice_label' => 'identifier']),
+            TextField::new('identifier')->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 }

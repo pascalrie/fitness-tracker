@@ -50,7 +50,7 @@ final class ExecutionApiController extends BaseApiController
         $workout = $this->workoutService->findLatest();
         $exercise = $this->exerciseService->showByUniqueName($exerciseName);
         $execution = $this->executionService->create($exercise, $workout, $set, $repetitions, $weight);
-
+        $execution = $this->executionService->updateIdentifier($execution);
         return $this->json($execution->jsonSerialize(), Response::HTTP_OK);
     }
 

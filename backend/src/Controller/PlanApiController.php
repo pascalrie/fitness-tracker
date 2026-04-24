@@ -36,7 +36,7 @@ final class PlanApiController extends BaseApiController
 
         $plan = $this->planService->create($totalDaysOfTraining, $trainingTimesAWeek, $split);
 
-        return $this->json($plan->jsonSerialize(), Response::HTTP_OK);
+        return $this->json($plan->jsonSerialize(false, true, true, true, true, true), Response::HTTP_OK);
     }
 
     #[Route('/api/plan/list', name: 'list_plan_api', methods: ['GET'])]
@@ -46,7 +46,7 @@ final class PlanApiController extends BaseApiController
         $plansArray = [];
         /** @var Plan $plan */
         foreach ($plans as $plan) {
-            $plansArray[] = $plan->jsonSerialize(true);
+            $plansArray[] = $plan->jsonSerialize(true, true, true, true, true, true);
         }
         return $this->json($plansArray, Response::HTTP_OK);
     }
@@ -55,7 +55,7 @@ final class PlanApiController extends BaseApiController
     public function show(int $id): JsonResponse
     {
         $plan = $this->planService->show($id);
-        return $this->json($plan->jsonSerialize(), Response::HTTP_OK);
+        return $this->json($plan->jsonSerialize(false, true, true, true, true, true), Response::HTTP_OK);
     }
 
     /**
@@ -77,7 +77,7 @@ final class PlanApiController extends BaseApiController
         }
 
         $newPlan = $this->planService->update($id, $isActive, $newTotalDaysOfTraining, $newTrainingTimesAWeek, $newSplit, $exercises);
-        return $this->json($newPlan->jsonSerialize(true), Response::HTTP_OK);
+        return $this->json($newPlan->jsonSerialize(true, true, true, true, true, true), Response::HTTP_OK);
     }
 
     #[Route('/api/plan/delete/{id}', name: 'delete_plan_api', methods: ['DELETE'])]
@@ -96,6 +96,6 @@ final class PlanApiController extends BaseApiController
     public function showLatest(): JsonResponse
     {
         $plan = $this->planService->showLatest();
-        return $this->json($plan->jsonSerialize(true), Response::HTTP_OK);
+        return $this->json($plan->jsonSerialize(true, true, true, true, true, true), Response::HTTP_OK);
     }
 }

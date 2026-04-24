@@ -24,7 +24,7 @@ class SetService
 
         $set->setExercise($exercise);
         $set->setWorkout($workout);
-        $set = $this->buildIdentifier($set);
+        $set->buildIdentifier();
 
         if ($repetitions !== null) {
             $set->setRepetitions($repetitions);
@@ -55,7 +55,7 @@ class SetService
             $set->setWorkout($workout);
         }
 
-        $set = $this->buildIdentifier($set);
+        $set->buildIdentifier();
 
         $this->setRepository->flush();
 
@@ -79,15 +79,5 @@ class SetService
     public function list(): array
     {
         return $this->setRepository->findAll();
-    }
-
-    public function buildIdentifier(Set $set): Set
-    {
-        $datetime = $set->getUpdatedAt()->format('d-m-Y H:i:s');
-        $workout = $set->getWorkout()->getId();
-        $exerciseName = $set->getExercise()->getUniqueName();
-        $set->setIdentifier($exerciseName . ' Workout Id: ' . $workout . ' (' . $datetime . ')');
-
-        return $set;
     }
 }

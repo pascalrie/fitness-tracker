@@ -21,7 +21,7 @@ class ExecutionService
     public function create(Exercise $exercise, Workout $workout, Set $set, int $repetitions = 12, float $weight = 0): Execution
     {
         $execution = new Execution($exercise, $set, $weight, $repetitions, $workout);
-        $this->buildIdentifier($execution);
+        $execution->buildIdentifier();
         $this->executionRepository->add($execution, true);
         return $execution;
     }
@@ -44,7 +44,7 @@ class ExecutionService
         if ($repetitions) {
             $execution->setRepetitions($repetitions);
         }
-        $execution = $this->buildIdentifier($execution);
+        $execution->buildIdentifier();
         $this->executionRepository->flush();
 
         return $execution;
@@ -74,14 +74,9 @@ class ExecutionService
         return $this->executionRepository->findBy([$identifier => $value]);
     }
 
-    public function buildIdentifier(Execution $execution): Execution
+    public function updateIdentifier(Execution $execution): Execution
     {
-        $datetime = $execution->getCreatedAt()->format('d-m-Y H:i:s');
-        $weight = $execution->getWeight();
-        $repetitions = $execution->getRepetitions();
-        $exerciseName = $execution->getExercise()->getUniqueName();
-        $execution->setIdentifier($exerciseName . ' Weight: ' . $weight . 'Repetitions: ' . $repetitions . ' (' . $datetime . ')');
-
+        $execution->buildIdentifier();
         return $execution;
     }
 }

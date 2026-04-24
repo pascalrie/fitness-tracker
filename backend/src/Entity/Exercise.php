@@ -208,7 +208,7 @@ class Exercise
         }
         if ($withPlans) {
             foreach ($this->getPlans() as $plan) {
-                $json['plans'][] = $plan->jsonSerialize();
+                $json['plans'][] = $plan->jsonSerialize(false, true, true, true, true, true);
             }
         }
 

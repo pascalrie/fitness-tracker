@@ -47,6 +47,7 @@ class Set
         $this->executions = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable('NOW');
         $this->updatedAt = new \DateTime('NOW');
+        $this->buildIdentifier();
     }
 
     public function getId(): ?int
@@ -145,7 +146,7 @@ class Set
     }
 
     public function jsonSerialize(bool $withExercise = true, bool $withExecutions = true, bool $withRepetitions = true,
-                                    bool $withWorkout = true): array
+                                    bool $withWorkout = true, bool $withIdentifier = true): array
     {
         $json = [
             'id' => $this->id,
@@ -170,6 +171,10 @@ class Set
             $json['workout'] = $this->workout->jsonSerialize();
         }
 
+        if ($withIdentifier) {
+            $json['identifier'] = $this->identifier;
+        }
+
         return $json;
     }
 
@@ -183,5 +188,11 @@ class Set
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    public function buildIdentifier(): void
+    {
+        $datetime = $this->getUpdatedAt()->format('d-m-Y H:i:s');
+        $this->setIdentifier($datetime);
     }
 }

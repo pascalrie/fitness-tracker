@@ -31,6 +31,7 @@ class WorkoutCrudController extends AbstractCrudController
             AssociationField::new('executions')
                 ->setCrudController(ExecutionCrudController::class)
                 ->setFormTypeOptions(['choice_label' => 'identifier']),
+            TextField::new('identifier')->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 }

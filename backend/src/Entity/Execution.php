@@ -29,7 +29,7 @@ class Execution
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    // Weight e.g. null in exercises with own bodyweight
+    // Weight e.g. 0 in exercises with own body-weight
     #[ORM\Column]
     private ?float $weight = null;
 
@@ -47,15 +47,18 @@ class Execution
     public function __construct(Exercise $exercise = null, Set $set = null, float $weight = 0, ?int $repetitions = 12, Workout $workout = null)
     {
         $this->createdAt = new \DateTimeImmutable('NOW');
-        if ($exercise !== null) {
-            $this->exercise = $exercise;
-        }
         if ($set !== null) {
             $this->associatedSet = $set;
         }
         $this->weight = $weight;
         $this->repetitions = $repetitions;
         $this->workout = $workout;
+        $this->setIdentifier('Created at: ' . $this->getCreatedAt()
+                 ->format('d-m-Y H:i:s'));
+        if ($exercise !== null) {
+            $this->exercise = $exercise;
+            $this->buildIdentifier();
+        }
     }
 
     public function getRepetitions(): ?int
@@ -82,7 +85,8 @@ class Execution
         return $this;
     }
 
-    public function jsonSerialize(bool $withRepetitions = true, bool $withWeight = true, bool $withExercise = true, bool $withWorkout = true, bool $withSet = true): array
+    public function jsonSerialize(bool $withRepetitions = true, bool $withWeight = true, bool $withExercise = true,
+                                  bool $withWorkout = true, bool $withSet = true, bool $withIdentifier = true): array
     {
         $json = [
             'id' => $this->id,
@@ -107,6 +111,10 @@ class Execution
 
         if ($withSet) {
             $json['set'] = $this->getAssociatedSet()->jsonSerialize();
+        }
+
+        if ($withIdentifier) {
+            $json['identifier'] = $this->getIdentifier();
         }
 
         return $json;
@@ -170,5 +178,15 @@ class Execution
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    public function buildIdentifier(): void
+    {
+        $datetime = $this->getCreatedAt()->format('d-m-Y H:i:s');
+        $weight = $this->getWeight();
+        $repetitions = $this->getRepetitions();
+        $exerciseName = $this->getExercise()->getUniqueName();
+        $this->setIdentifier($exerciseName . ' Weight: ' . $weight . ' Repetitions: ' . $repetitions
+            . ' (' . $datetime . ')');
     }
 }

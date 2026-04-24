@@ -36,6 +36,7 @@ class PlanCrudController extends AbstractCrudController
             IntegerField::new('split'),
             DateTimeField::new('updatedAt')->hideWhenCreating()->hideWhenUpdating(),
             BooleanField::new('active'),
+            TextField::new('identifier')->hideWhenCreating()->hideWhenUpdating(),
         ];
     }
 }

@@ -112,28 +112,6 @@ class ExecutionServiceTest extends TestCase
         $this->assertEquals($setToAdd, $createdExecution->getAssociatedSet());
     }
 
-    public function testBuildIdentifier(): void
-    {
-        $this->repoMock->method('findOneBy')->willReturn($this->execution);
-        $this->execution->setRepetitions(11);
-        $this->execution->setWeight(80.0);
-
-        $exerciseToAdd = new Exercise('unique name');
-        $reflection = new \ReflectionClass($exerciseToAdd);
-        $property = $reflection->getProperty('id');
-        $property->setValue($exerciseToAdd, 123);
-
-        $this->exerciseRepoMock->method('findOneBy')->willReturn($exerciseToAdd);
-
-        $execution = $this->executionService->buildIdentifier($this->execution);
-
-        $this->assertNotNull($execution);
-        $this->assertNotEmpty($execution->getIdentifier());
-        $this->assertInstanceOf(Execution::class, $execution);
-        $this->assertTrue(str_contains($execution->getIdentifier(), 80.0));
-        $this->assertTrue(str_contains($execution->getIdentifier(), 11));
-    }
-
     /**
      * @throws \Exception
      */

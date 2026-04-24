@@ -62,6 +62,7 @@ class Workout
         $this->exercises = new ArrayCollection();
         $this->executions = new ArrayCollection();
         $this->sets = new ArrayCollection();
+        $this->buildIdentifier();
     }
 
     public function getDateOfWorkout(): ?\DateTime
@@ -100,7 +101,9 @@ class Workout
         return $this;
     }
     // TODO: Signatur bei Aufrufen anpassen
-    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = true, bool $withStretch = true, bool $withExercises = true, bool $withExecutions = false): array
+    public function jsonSerialize(bool $withDateOfWorkout = true, bool $withBodyWeight = true,
+                                  bool $withStretch = true, bool $withExercises = true, bool $withExecutions = false,
+                                  bool $withIdentifier = true): array
     {
         $json = [
             'id' => $this->id,
@@ -128,6 +131,10 @@ class Workout
             foreach ($this->getExecutions() as $execution) {
                 $json['executions'][] = $execution->jsonSerialize();
             }
+        }
+
+        if ($withIdentifier) {
+            $json['identifier'] = $this->identifier;
         }
         return $json;
     }
@@ -229,5 +236,12 @@ class Workout
         $this->identifier = $identifier;
 
         return $this;
+    }
+
+    public function buildIdentifier(): void
+    {
+        $datetime = $this->getDateOfWorkout()->format('d-m-Y');
+        $stretch = $this->isStretch();
+        $this->setIdentifier($datetime . ' Stretched: ' . $stretch);
     }
 }

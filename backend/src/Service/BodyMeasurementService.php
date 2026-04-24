@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\BodyMeasurement;
 use App\Repository\BodyMeasurementRepository;
 use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 
 class BodyMeasurementService
 {
@@ -18,26 +19,20 @@ class BodyMeasurementService
     public function create(int $fitnessEvaluation, float $bodyWeight, float $bodyHeight, float $bmi): BodyMeasurement
     {
         $bodyMeasurement = new BodyMeasurement($bodyWeight, $bmi, $fitnessEvaluation, $bodyHeight);
-        $bodyMeasurement = $this->buildIdentifier($bodyMeasurement);
-
+        $bodyMeasurement->buildIdentifier();
         $this->bodyMeasurementRepository->add($bodyMeasurement, true);
         return $bodyMeasurement;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(int    $id, ?float $bodyWeight = null, ?float $bmi = null, ?int $fitnessEvaluation = null,
                            ?float $bodyHeight = null): BodyMeasurement
     {
-
         $bodyMeasurement = $this->show($id);
         $bodyMeasurement->setUpdatedAt(new \DateTime());
-        $bodyMeasurement = $this->buildIdentifier($bodyMeasurement);
 
-        if (!$bodyMeasurement) {
-            throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found');
-        }
         if ($bodyWeight !== null) {
             $bodyMeasurement->setBodyWeight($bodyWeight);
         }
@@ -50,6 +45,7 @@ class BodyMeasurementService
         if ($bodyHeight !== null) {
             $bodyMeasurement->setBodyHeight($bodyHeight);
         }
+        $bodyMeasurement->buildIdentifier();
 
         $this->bodyMeasurementRepository->flush();
         return $bodyMeasurement;
@@ -57,7 +53,7 @@ class BodyMeasurementService
 
     public function delete(int $id): void
     {
-        $bodyMeasurement = $this->bodyMeasurementRepository->findBy(['id' => $id])[0];
+        $bodyMeasurement = $this->show($id);
         if (!$bodyMeasurement) {
             throw new EntityNotFoundException('Body Measurement with id ' . $id . ' not found for deletion.');
         }
@@ -82,18 +78,5 @@ class BodyMeasurementService
     public function getLatest(): BodyMeasurement
     {
         return $this->bodyMeasurementRepository->findOneBy([], ['createdAt' => 'DESC']);
-    }
-
-
-    public function buildIdentifier(BodyMeasurement $bodyMeasurement): BodyMeasurement
-    {
-        $weight = $bodyMeasurement->getBodyWeight();
-        $height = $bodyMeasurement->getBodyHeight();
-        $fitnessEvaluation = $bodyMeasurement->getFitnessEvaluation();
-        $updatedAt = $bodyMeasurement->getUpdatedAt()->format('d-m-YY H:i:s');
-
-        $bodyMeasurement->setIdentifier('Fitness Eval: ' . $fitnessEvaluation . ' Weight: ' . $weight . ' Height: ' . $height . ' (' . $updatedAt . ')');
-
-        return $bodyMeasurement;
     }
 }
