@@ -1,0 +1,36 @@
+services:
+    web:
+        image: php:8.2-apache
+        container_name: web
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - ./php.ini:/usr/local/etc/php/php.ini
+        ports:
+            - "8081:81"
+        environment:
+            - APACHE_DOCUMENT_ROOT=/var/www/html/public
+        depends_on:
+            - db
+        networks:
+            - symfony-network
+    db:
+        image: mariadb:10.11
+        container_name: mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: fitness-tracker-v5-db
+            MYSQL_USER: db
+            MYSQL_PASSWORD: db
+        ports:
+            - "3308:3308"
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - symfony-network
+volumes:
+    db_data:
+
+networks:
+    symfony-network:
+        driver: bridge

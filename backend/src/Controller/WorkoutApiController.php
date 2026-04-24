@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Controller;
+
+use App\Service\WorkoutService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class WorkoutApiController extends BaseApiController
+{
+    protected WorkoutService $workoutService;
+
+    public function __construct(EntityManagerInterface $entityManager, WorkoutService $workoutService)
+    {
+        parent::__construct($entityManager);
+        $this->workoutService = $workoutService;
+    }
+
+    #[Route('/api/workout/create', name: 'create_workout_api', methods: ['POST'])]
+    public function create(Request $request): JsonResponse
+    {
+        $bodyParameters = $this->getBodyParameters($request);
+        $stretch = (bool)$bodyParameters->stretch;
+        $bodyWeight = (float)$bodyParameters->bodyWeight;
+
+        $workout = $this->workoutService->create($stretch, $bodyWeight);
+        return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/list', name: 'list_workout_api', methods: ['GET'])]
+    public function list(): JsonResponse
+    {
+        $workouts = $this->workoutService->list();
+        $workoutArray = [];
+        foreach ($workouts as $workout) {
+            $workoutArray[] = $workout->jsonSerialize();
+        }
+        return $this->json($workoutArray, Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/update/{id}', name: 'update_workout_api', methods: ['PUT'])]
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $bodyParameters = $this->getBodyParameters($request);
+        $updatedStretch = (bool)$bodyParameters->stretch;
+        $updatedBodyWeight = (float)$bodyParameters->weight;
+
+        $updatedWorkout = $this->workoutService->update($id, $updatedStretch, $updatedBodyWeight);
+        return $this->json($updatedWorkout->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/show/{id}', name: 'show_workout_api', methods: ['GET'])]
+    public function show(int $id): JsonResponse
+    {
+        $workout = $this->workoutService->show($id);
+        return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/delete/{id}', name: 'delete_workout_api', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        $this->workoutService->delete($id);
+        $shouldBeNull = $this->workoutService->show($id);
+        if (null !== $shouldBeNull) {
+            return $this->json('Deletion of Workout with id: ' . $id . ' failed.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return $this->json('Deletion was successful.', Response::HTTP_OK);
+    }
+
+    #[Route('/api/workout/latest', name: 'show_latest_workout_api', methods: ['GET'])]
+    public function showLatest(): JsonResponse
+    {
+        $workout = $this->workoutService->findLatest();
+        return $this->json($workout->jsonSerialize(true, true, true, true, true), Response::HTTP_OK);
+    }
+}

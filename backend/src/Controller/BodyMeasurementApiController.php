@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Controller;
+
+use App\Service\BodyMeasurementService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final class BodyMeasurementApiController extends BaseApiController
+{
+    protected BodyMeasurementService $bodyMeasurementService;
+
+    public function __construct(EntityManagerInterface $entityManager, BodyMeasurementService $bodyMeasurementService)
+    {
+        parent::__construct($entityManager);
+        $this->bodyMeasurementService = $bodyMeasurementService;
+    }
+
+    #[Route('/api/body/measurement/create', name: 'create_body_measurement_api', methods: ['POST'])]
+    public function create(Request $request): JsonResponse
+    {
+        $bodyParameters = $this->getBodyParameters($request);
+        $fitnessEvaluation = (int)$bodyParameters->fitnessEvaluation;
+        $bodyWeight = (float)$bodyParameters->bodyWeight;
+        $bodyHeight = (float)$bodyParameters->bodyHeight;
+
+        $bmi = $this->bodyMeasurementService->calculateBmi($bodyWeight, $bodyHeight);
+
+        $bodyMeasurement = $this->bodyMeasurementService->create($fitnessEvaluation, $bodyWeight, $bodyHeight, $bmi);
+        return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/body/measurement/list', name: 'list_body_measurement_api', methods: ['GET'])]
+    public function list(): JsonResponse
+    {
+        $bodyMeasurements = $this->bodyMeasurementService->list();
+        $measurements = [];
+        foreach ($bodyMeasurements as $bodyMeasurement) {
+            $measurements[] = $bodyMeasurement->jsonSerialize();
+        }
+        return $this->json($measurements, Response::HTTP_OK);
+    }
+
+    #[Route('/api/body/measurement/show/{id}', name: 'show_body_measurement_api', methods: ['GET'])]
+    public function show(int $id): JsonResponse
+    {
+        $bodyMeasurement = $this->bodyMeasurementService->show($id);
+        return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/body/measurement/update/{id}', name: 'update_body_measurement_api', methods: ['PUT'])]
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $bodyParameters = $this->getBodyParameters($request);
+        $fitnessEvaluation = (int)$bodyParameters->fitnessEvaluation;
+        $bodyWeight = (float)$bodyParameters->bodyWeight;
+        $bodyHeight = (float)$bodyParameters->bodyHeight;
+
+        $bmi = $this->bodyMeasurementService->calculateBmi($bodyWeight, $bodyHeight);
+        $bodyMeasurement = $this->bodyMeasurementService->update($id, $bodyWeight, $bmi, $fitnessEvaluation, $bodyHeight);
+        return $this->json($bodyMeasurement->jsonSerialize(), Response::HTTP_OK);
+    }
+
+    #[Route('/api/body/measurement/delete/{id}', name: 'delete_body_measurement_api', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        $this->bodyMeasurementService->delete($id);
+        $shouldBeNull = $this->bodyMeasurementService->show($id);
+        if (null !== $shouldBeNull) {
+            return $this->json("Deletion of Body Measurement with id: " . $id . " failed.", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        return $this->json("Deletion was successful.", Response::HTTP_OK);
+    }
+}
