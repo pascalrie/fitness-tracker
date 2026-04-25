@@ -36,18 +36,18 @@ zu erstellen und die Durchführung festzuhalten.
 #### 2.2 Abhängigkeiten des Projektes via ```composer install``` installieren
 
 #### 2.3 Erstellung der Datenbank im ddev
-```ddev exec app php bin/console doctrine:database:create```
+```ddev exec php bin/console doctrine:database:create```
 
 #### 2.4 Update der Datenbank (um die Entitäten der Anwendung richtig abzubilden)
 
-```ddev exec app php bin/console doctrine:schema:update --force```
+```ddev exec php bin/console doctrine:schema:update --force```
 
 ### 3. Nutzung:
 
 #### 3.1. Mögliche Routen der API
 
 ##### 3.1.1 Zeigen dieser per Befehl
-```ddev exec app php bin/console debug:router```
+```ddev exec php bin/console debug:router```
 
 #### 3.2 Auf Server im Browser zugreifen (nach ```ddev start```):
 - https://backend.ddev.site/ 
