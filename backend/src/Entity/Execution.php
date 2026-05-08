@@ -186,7 +186,7 @@ class Execution
         $weight = $this->getWeight();
         $repetitions = $this->getRepetitions();
         $exerciseName = $this->getExercise()->getUniqueName();
-        $this->setIdentifier($exerciseName . ' Weight: ' . $weight . ' Repetitions: ' . $repetitions
+        $this->setIdentifier('Exercise Name: ' . $exerciseName . ' Weight: ' . $weight . ' Repetitions: ' . $repetitions
             . ' (' . $datetime . ')');
     }
 }

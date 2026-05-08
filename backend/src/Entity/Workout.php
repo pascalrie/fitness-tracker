@@ -242,6 +242,6 @@ class Workout
     {
         $datetime = $this->getDateOfWorkout()->format('d-m-Y');
         $stretch = $this->isStretch();
-        $this->setIdentifier($datetime . ' Stretched: ' . $stretch);
+        $this->setIdentifier('Stretched: ' . $stretch . ';' . $datetime);
     }
 }
