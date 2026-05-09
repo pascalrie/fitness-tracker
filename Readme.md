@@ -42,6 +42,15 @@ zu erstellen und die Durchführung festzuhalten.
 
 ```ddev exec php bin/console doctrine:schema:update --force```
 
+### 2.5 Nutzung eines Beispieldatensatzes durch DataFixtures
+
+**Achtung:** Der folgende Befehl löscht die Daten einer möglicherweise vorhandenen Datenbank.
+
+Der folgende Befehl lädt einen Beispieldatensatz: 
+
+```ddev exec php bin/console doctrine:fixtures:load```
+
+
 ### 3. Nutzung:
 
 #### 3.1. Mögliche Routen der API
