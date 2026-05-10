@@ -7,13 +7,20 @@ namespace App\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class CorsListener implements EventSubscriberInterface
 {
+    private const array ALLOWED_ORIGINS = [
+        "https://backend-fitness-tracker-v5",
+        "http://backend-fitness-tracker-v5",
+        'https://localhost',
+        'http://localhost',
+        'http://localhost:3000',
+        'http://localhost:5173',
+    ];
     public static function getSubscribedEvents(): array
     {
         return [
@@ -22,32 +29,24 @@ final class CorsListener implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelException(ExceptionEvent $event): void
-    {
-        $response = $event->getResponse();
-        if ($response) {
-            $response->headers->set('Access-Control-Allow-Origin', '*,origin');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-            $response->headers->set('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
-        }
-    }
-
     public function onKernelRequest(RequestEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
         }
-        $request = $event->getRequest();
-        $method = $request->getMethod();
-        if ('OPTIONS' === strtoupper($method)) {
-            $response = new Response();
-            $response->headers->set('Access-Control-Allow-Origin', 'localhost');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-            $response->headers->set('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
 
-            $response->setStatusCode(204);
-            $event->setResponse($response);
+        $request = $event->getRequest();
+
+        if ($request->getMethod() !== Request::METHOD_OPTIONS) {
+            return;
         }
+
+        $response = new Response();
+        $this->addCorsHeaders($request, $response);
+
+        $response->setStatusCode(Response::HTTP_NO_CONTENT);
+
+        $event->setResponse($response);
     }
 
     public function onKernelResponse(ResponseEvent $event): void
@@ -56,11 +55,33 @@ final class CorsListener implements EventSubscriberInterface
             return;
         }
 
+        $request = $event->getRequest();
         $response = $event->getResponse();
-        $response->headers->set('Access-Control-Allow-Origin', 'localhost');
-        $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
-        $response->headers->set('Access-Control-Expose-Headers', 'Content-Length, Content-Range');
+
+        $this->addCorsHeaders($request, $response);
+    }
+
+    private function addCorsHeaders(Request $request, Response $response): void
+    {
+        $origin = $request->headers->get('Origin');
+
+        if ($origin && in_array($origin, self::ALLOWED_ORIGINS, true)) {
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+        }
+
+        $response->headers->set(
+            'Access-Control-Allow-Methods',
+            'GET, POST, PUT, PATCH, DELETE, OPTIONS'
+        );
+
+        $response->headers->set(
+            'Access-Control-Allow-Headers',
+            'Authorization, Content-Type, X-Requested-With'
+        );
+
+        $response->headers->set(
+            'Access-Control-Allow-Credentials',
+            'true'
+        );
     }
 }
