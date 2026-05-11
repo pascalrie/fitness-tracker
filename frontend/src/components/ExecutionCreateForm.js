@@ -156,7 +156,7 @@ const ExecutionCreateForm = () => {
                     </option>
                     {reversedSets.map((set) => (
                         <option key={set.id} value={set.id}>
-                            id: {set.id}, {set.exercise.uniqueName} {set.repetitions} Reps
+                            id: {set.id}, {set.identifier} {set.repetitions} Reps
                         </option>
                     ))}
                 </select> : <p>"Sets are loading..."</p>}

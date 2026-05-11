@@ -110,7 +110,7 @@ class WorkoutServiceTest extends TestCase
         $this->repoMock->method('findBy')->willReturn([$this->workout]);
         $this->bodyMeasurementMock->method('findOneBy')->willReturn($this->bodyMeasurement);
 
-        $currentIdentifier = (new \DateTime('NOW'))->format('d-m-Y') . ' Stretched: ';
+        $currentIdentifier = 'Stretched: ' . ';' . (new \DateTime('NOW'))->format('d-m-Y');
         $this->workout->buildIdentifier();
         $this->assertInstanceOf(Workout::class, $this->workout);
         $this->assertEquals($currentIdentifier, $this->workout->getIdentifier());

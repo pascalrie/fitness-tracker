@@ -74,6 +74,6 @@ final class WorkoutApiController extends BaseApiController
     public function showLatest(): JsonResponse
     {
         $workout = $this->workoutService->findLatest();
-        return $this->json($workout->jsonSerialize(true, true, true, true, true), Response::HTTP_OK);
+        return $this->json($workout->jsonSerialize(), Response::HTTP_OK);
     }
 }
