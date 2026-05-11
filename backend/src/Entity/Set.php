@@ -145,7 +145,7 @@ class Set
         return $this;
     }
 
-    public function jsonSerialize(bool $withExercise = true, bool $withExecutions = true, bool $withRepetitions = true,
+    public function jsonSerialize(bool $withExercise = true, bool $withExecutions = false, bool $withRepetitions = true,
                                     bool $withWorkout = true, bool $withIdentifier = true): array
     {
         $json = [
