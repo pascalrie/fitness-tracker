@@ -50,6 +50,12 @@ Der folgende Befehl lädt einen Beispieldatensatz:
 
 ```ddev exec php bin/console doctrine:fixtures:load```
 
+### 2.6 Anpassung der DDEV-config für die Routen im Frontend
+#### 2.6.1 Im .ddev-Ordner in der config.yaml 
+
+name: backend-fitness-tracker-v5 
+
+**ganz oben einfügen.**  
 
 ### 3. Nutzung:
 
@@ -77,6 +83,5 @@ Der folgende Befehl lädt einen Beispieldatensatz:
 ```yarn start```
 
 ### 6. TODOs
-- CORS-Error bei Verbindung zwischen Front- und Backend lösen
 - Integrationstests schreiben
 - Docker-compose funktionsfähig machen
