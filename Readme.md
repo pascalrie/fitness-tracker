@@ -25,7 +25,7 @@ zu erstellen und die Durchführung festzuhalten.
 #### Als Erstes sicherstellen, dass Docker gestartet ist!
 **Zweitens:**
 ```ddev config```
-(Bei den Fragen des ddev standardmäßig: "backend, public, symfony" antworten)
+(Bei den Fragen des ddev: "backend-fitness-tracker-v5, public, symfony" antworten)
 
 ### 2. Datenbank generieren
 
@@ -33,7 +33,11 @@ zu erstellen und die Durchführung festzuhalten.
 
 **"Die Anwendung wurde unter mariadb-10.11.0 getestet"**
 
-#### 2.2 Abhängigkeiten des Projektes via ```composer install``` installieren
+
+bspw.: DATABASE_URL="mysql://db:db@db/db?serverVersion=mariadb-10.11.0" (als DATABASE_URL)
+
+
+#### 2.2 Abhängigkeiten des Projektes via ```ddev start```, anschließend: ```ddev exec composer install``` installieren
 
 #### 2.3 Erstellung der Datenbank im ddev
 ```ddev exec php bin/console doctrine:database:create```
@@ -50,12 +54,12 @@ Der folgende Befehl lädt einen Beispieldatensatz:
 
 ```ddev exec php bin/console doctrine:fixtures:load```
 
-### 2.6 Anpassung der DDEV-config für die Routen im Frontend
+### 2.6 Anpassung/Sicherstellung der DDEV-config für die Routen im Frontend
 #### 2.6.1 Im .ddev-Ordner in der config.yaml 
 
 name: backend-fitness-tracker-v5 
 
-**ganz oben einfügen.**  
+**ganz oben einfügen/sicherstellen, dass es so eingerichtet ist.**  
 
 ### 3. Nutzung:
 
@@ -65,10 +69,10 @@ name: backend-fitness-tracker-v5
 ```ddev exec php bin/console debug:router```
 
 #### 3.2 Auf Server im Browser zugreifen (nach ```ddev start```):
-- https://backend.ddev.site/ 
+- https://backend-fitness-tracker-v5.ddev.site
 
 #### 3.2.1 Zugriff auf das Easyadmin-Dashboard: /admin-Route nutzen
-- https://backend.ddev.site/admin
+- https://backend-fitness-tracker-v5.ddev.site/admin
 
 ### 4. Ausführen der Tests im Terminal (im Backend-Ordner):
 ```./vendor/bin/phpunit```
